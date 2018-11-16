@@ -1,0 +1,310 @@
+
+<!DOCTYPE html>
+<html >
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<!--<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE8"/>-->
+<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+
+<meta name="viewport" content="width=device-width,maximum-scale=1.0, minimum-scale=1.0">
+   
+<script src="js/jquery-1.10.2.min.js" type="text/javascript"></script>
+<script src="js/bootstrap.min.js" type="text/javascript"></script>
+<link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+<link rel="stylesheet" type="text/css" href="css/style.css">
+
+</head>
+<body>
+<script>  
+$(document).ready(function(){
+    for(let i=0;i<10000;i++){
+        $('#line'+i).click(function(){
+            var Upload='#upload'+i
+            $(Upload).show();
+            $(this).parents('ul').hide();
+            $(this).parents('ul').siblings('.back1').hide();
+            $(this).parents('ul').siblings('.back2').css('display','block');
+        });
+        $('#up-btn'+i).click(function(){
+            var TableUpload='#tableUpload'+i
+            $(TableUpload).click();
+        });
+        $('.back2').click(function(){
+            var Upload='#upload'+i
+            $(Upload).hide();
+            $(this).siblings('ul').show();
+            $(this).siblings('.back1').show();
+            $(this).hide();
+        });
+        
+        $('.back1').click(function(){
+            $('.line-choose').hide();
+            $('#basic').show();
+        });
+        $('#cz-btn2').click(function(){
+            $('#czsj').show();
+            $('#basic').hide();
+        });
+        $('#kl-btn').click(function(){
+            $('#klsj').show();
+            $('#basic').hide();
+        });
+    };
+    $("#next_id").click(function(){
+    	location.href="/stationChoese";
+    	});
+    
+});
+
+</script>  
+
+ <div class="header">
+    <div class="header-in">
+       <div class="float-left"><h1>基于客流压力评估的上海轨道交通车站分级系统</h1></div>
+       <div class="float-right">
+           <a href="#">新建数据报告</a>
+           <a href="#">历史数据信息</a>
+           <a href="#">统计分析汇总</a>
+       </div>
+    </div>
+ </div>
+	
+ <div class="container ">
+    <div class="card station-info" style="margin-top: 10%;width: 800px;">
+      <div class="card-in basic-info" id="basic">
+         <h5>基础数据导入</h5>
+          <div class="upload-file">
+                    <a href="#"  id="kl-btn">基础客流数据</a> 
+                    <a href="#"  id="cz-btn2">车站基础数据</a> 
+                    <button class="btn btn-primary col" id="next_id">下一步</button>
+          </div>
+      </div>
+      <!--基础客流数据-->
+       <div class="card-in basic-info line-choose" id="klsj" style="display: none">
+           <div class="table-cover" style="height: auto; background: none;">
+                <h5>导入基础客流数据</h5>
+                <ul>
+                    <li><a href="#" class="complete" id="line1">一号线</a></li>
+                    <li><a href="#" id="line2">二号线</a></li>
+                    <li><a href="#" id="line3">三号线</a></li>
+                    <li><a href="#" id="line4">四号线</a></li>
+                    <li><a href="#" id="line5">五号线</a></li>
+                    <li><a href="#" id="line6">六号线</a></li>
+                    <li><a href="#" id="line7">七号线</a></li>
+                    <li><a href="#" id="line8">八号线</a></li>
+                    <li><a href="#" id="line9">九号线</a></li>
+                    <li><a href="#" id="line10">十号线</a></li>
+                    <li><a href="#" id="line11">十一号线</a></li>
+                    <li><a href="#" id="line12">十二号线</a></li>
+                    <li><a href="#" id="line13">十三号线</a></li>
+                    <li><a href="#" id="line14">十六号线</a></li>
+                    <li><a href="#" id="line15">十七号线</a></li>
+                </ul> 
+                <div class="upload-file" id="upload1">
+                    <a href="#"  id="up-btn1">上传换乘客流量表<span></span></a> 
+                    <input type="file" id="tableUpload1" style="display:none;">
+                    <a href="#"  id="up-btn2">上传进出站客流量表</a> 
+                    <input type="file" id="tableUpload2" style="display:none;">
+                </div> 
+                <div class="upload-file" id="upload2">
+                    <a href="#"  id="up-btn3">上传换乘客流量表</a> 
+                    <input type="file" id="tableUpload3" style="display:none;">
+                    <a href="#"  id="up-btn4">上传进出站客流量表</a> 
+                    <input type="file" id="tableUpload4" style="display:none;">
+                </div>
+                <div class="upload-file" id="upload3">
+                    <a href="#"  id="up-btn5">上传换乘客流量表</a> 
+                    <input type="file" id="tableUpload5" style="display:none;">
+                    <a href="#"  id="up-btn6">上传进出站客流量表</a> 
+                    <input type="file" id="tableUpload6" style="display:none;">
+                </div>
+                <div class="upload-file" id="upload4">
+                    <a href="#"  id="up-btn7">上传换乘客流量表</a> 
+                    <input type="file" id="tableUpload7" style="display:none;">
+                    <a href="#"  id="up-btn8">上传进出站客流量表</a> 
+                    <input type="file" id="tableUpload8" style="display:none;">
+                </div>
+                <div class="upload-file" id="upload5">
+                    <a href="#"  id="up-btn9">上传换乘客流量表</a> 
+                    <input type="file" id="tableUpload9" style="display:none;">
+                    <a href="#"  id="up-btn10">上传进出站客流量表</a> 
+                    <input type="file" id="tableUpload10" style="display:none;">
+                </div>
+                 <div class="upload-file" id="upload6">
+                    <a href="#"  id="up-btn11">上传换乘客流量表</a> 
+                    <input type="file" id="tableUpload11" style="display:none;">
+                    <a href="#"  id="up-btn12">上传进出站客流量表</a> 
+                    <input type="file" id="tableUpload12" style="display:none;">
+                </div>
+                <div class="upload-file" id="upload7">
+                    <a href="#"  id="up-btn13">上传换乘客流量表</a> 
+                    <input type="file" id="tableUpload13" style="display:none;">
+                    <a href="#"  id="up-btn14">上传进出站客流量表</a> 
+                    <input type="file" id="tableUpload14" style="display:none;">
+                </div>
+                <div class="upload-file" id="upload8">
+                    <a href="#"  id="up-btn15">上传换乘客流量表</a> 
+                    <input type="file" id="tableUpload15" style="display:none;">
+                    <a href="#"  id="up-btn16">上传进出站客流量表</a> 
+                    <input type="file" id="tableUpload16" style="display:none;">
+                </div>
+                <div class="upload-file" id="upload9">
+                    <a href="#"  id="up-btn17">上传换乘客流量表</a> 
+                    <input type="file" id="tableUpload17" style="display:none;">
+                    <a href="#"  id="up-btn18">上传进出站客流量表</a> 
+                    <input type="file" id="tableUpload18" style="display:none;">
+                </div>
+                 <div class="upload-file" id="upload10">
+                    <a href="#"  id="up-btn19">上传换乘客流量表</a> 
+                    <input type="file" id="tableUpload19" style="display:none;">
+                    <a href="#"  id="up-btn20">上传进出站客流量表</a> 
+                    <input type="file" id="tableUpload20" style="display:none;">
+                </div>
+                <div class="upload-file" id="upload11">
+                    <a href="#"  id="up-btn21">上传换乘客流量表</a> 
+                    <input type="file" id="tableUpload21" style="display:none;">
+                    <a href="#"  id="up-btn22">上传进出站客流量表</a> 
+                    <input type="file" id="tableUpload22" style="display:none;">
+                </div>
+                 <div class="upload-file" id="upload12">
+                    <a href="#"  id="up-btn23">上传换乘客流量表</a> 
+                    <input type="file" id="tableUpload23" style="display:none;">
+                    <a href="#"  id="up-btn24">上传进出站客流量表</a> 
+                    <input type="file" id="tableUpload24" style="display:none;">
+                </div>
+                <div class="upload-file" id="upload13">
+                    <a href="#"  id="up-btn25">上传换乘客流量表</a> 
+                    <input type="file" id="tableUpload25" style="display:none;">
+                    <a href="#"  id="up-btn26">上传进出站客流量表</a> 
+                    <input type="file" id="tableUpload26" style="display:none;">
+                </div>
+                <div class="upload-file" id="upload14">
+                    <a href="#"  id="up-btn27">上传换乘客流量表</a> 
+                    <input type="file" id="tableUpload27" style="display:none;">
+                    <a href="#"  id="up-btn28">上传进出站客流量表</a> 
+                    <input type="file" id="tableUpload28" style="display:none;">
+                </div>
+                <div class="upload-file" id="upload15">
+                    <a href="#"  id="up-btn29">上传换乘客流量表</a> 
+                    <input type="file" id="tableUpload29" style="display:none;">
+                    <a href="#"  id="up-btn30">上传进出站客流量表</a> 
+                    <input type="file" id="tableUpload30" style="display:none;">
+                </div>
+                  
+<!--                <button class="btn btn-primary col">下一步</button>-->
+                <button class="btn btn-secondary col back1"  >返回</button>
+                <button class="btn btn-secondary col back2"  style="display: none;">返回</button>
+           </div>
+       </div>
+       <!--基础客流数据--> 
+      <!--基础车站数据-->
+       <div class="card-in basic-info line-choose" id="czsj" style="display: none">
+           <div class="table-cover" style="height: auto; background: none;">
+                <h5>导入车站基础数据</h5>
+                <ul>
+                    <li><a href="#" class="complete" id="line111">一号线</a></li>
+                    <li><a href="#" id="line112">二号线</a></li>
+                    <li><a href="#" id="line113">三号线</a></li>
+                    <li><a href="#" id="line114">四号线</a></li>
+                    <li><a href="#" id="line115">五号线</a></li>
+                    <li><a href="#" id="line116">六号线</a></li>
+                    <li><a href="#" id="line117">七号线</a></li>
+                    <li><a href="#" id="line118">八号线</a></li>
+                    <li><a href="#" id="line119">九号线</a></li>
+                    <li><a href="#" id="line1110">十号线</a></li>
+                    <li><a href="#" id="line1111">十一号线</a></li>
+                    <li><a href="#" id="line1112">十二号线</a></li>
+                    <li><a href="#" id="line1113">十三号线</a></li>
+                    <li><a href="#" id="line1114">十六号线</a></li>
+                    <li><a href="#" id="line1115">十七号线</a></li>
+                </ul> 
+                <div class="upload-file" id="upload111">
+                    <a href="#"  id="up-btn111">上传车站基础数据表<span></span></a> 
+                    <input type="file" id="tableUpload111" style="display:none;">
+                    
+                </div> 
+                <div class="upload-file" id="upload112">
+                    <a href="#"  id="up-btn113">上传车站基础数据表</a> 
+                    <input type="file" id="tableUpload113" style="display:none;">
+                    
+                </div>
+                <div class="upload-file" id="upload113">
+                    <a href="#"  id="up-btn115">上传车站基础数据表</a> 
+                    <input type="file" id="tableUpload115" style="display:none;">
+                    
+                </div>
+                <div class="upload-file" id="upload114">
+                    <a href="#"  id="up-btn117">上传车站基础数据表</a> 
+                    <input type="file" id="tableUpload117" style="display:none;">
+                    
+                </div>
+                <div class="upload-file" id="upload115">
+                    <a href="#"  id="up-btn119">上传车站基础数据表</a> 
+                    <input type="file" id="tableUpload119" style="display:none;">
+                   
+                </div>
+                 <div class="upload-file" id="upload116">
+                    <a href="#"  id="up-btn1111">上传车站基础数据表</a> 
+                    <input type="file" id="tableUpload1111" style="display:none;">
+                    
+                </div>
+                <div class="upload-file" id="upload117">
+                    <a href="#"  id="up-btn1113">上传车站基础数据表</a> 
+                    <input type="file" id="tableUpload1113" style="display:none;">
+                    
+                </div>
+                <div class="upload-file" id="upload118">
+                    <a href="#"  id="up-btn1115">上传车站基础数据表</a> 
+                    <input type="file" id="tableUpload1115" style="display:none;">
+                    
+                </div>
+                <div class="upload-file" id="upload119">
+                    <a href="#"  id="up-btn1117">上传车站基础数据表</a> 
+                    <input type="file" id="tableUpload1117" style="display:none;">
+                    
+                </div>
+                 <div class="upload-file" id="upload1110">
+                    <a href="#"  id="up-btn1119">上传车站基础数据表</a> 
+                    <input type="file" id="tableUpload1119" style="display:none;">
+                    
+                </div>
+                <div class="upload-file" id="upload1111">
+                    <a href="#"  id="up-btn1121">上传车站基础数据表</a> 
+                    <input type="file" id="tableUpload1121" style="display:none;">
+                    
+                </div>
+                 <div class="upload-file" id="upload1112">
+                    <a href="#"  id="up-btn1123">上传车站基础数据表</a> 
+                    <input type="file" id="tableUpload1123" style="display:none;">
+                    
+                </div>
+                <div class="upload-file" id="upload1113">
+                    <a href="#"  id="up-btn1125">上传车站基础数据表</a> 
+                    <input type="file" id="tableUpload1125" style="display:none;">
+                    
+                </div>
+                <div class="upload-file" id="upload1114">
+                    <a href="#"  id="up-btn1127">上传车站基础数据表</a> 
+                    <input type="file" id="tableUpload1127" style="display:none;">
+                   
+                </div>
+                <div class="upload-file" id="upload1115">
+                    <a href="#"  id="up-btn1129">上传车站基础数据表</a> 
+                    <input type="file" id="tableUpload1129" style="display:none;">
+                    
+                </div>
+                  
+<!--                <button class="btn btn-primary col">下一步</button>-->
+                <button class="btn btn-secondary col back1"  >返回</button>
+                <button class="btn btn-secondary col back2"  style="display: none;">返回</button>
+           </div>
+       </div>
+       <!--基础车站数据--> 
+    </div>
+    
+   
+    
+ </div>		
+              
+</body>
+</html>  

@@ -1,0 +1,209 @@
+
+<!DOCTYPE html >
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<!--<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE8"/>-->
+<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+
+<meta name="viewport" content="width=device-width,maximum-scale=1.0, minimum-scale=1.0">
+   
+<script src="/js/jquery-1.10.2.min.js" type="text/javascript"></script>
+<script src="/js/bootstrap.min.js" type="text/javascript"></script>
+
+<script src="/js/pressureTypeSelect/pressureTypeSelect.js" type="text/javascript"></script>
+
+<link rel="stylesheet" type="text/css" href="/css/bootstrap.css">
+<link rel="stylesheet" type="text/css" href="/css/style.css">
+
+</head>
+<body>
+
+<!--<input type="text" th:value="${dataStrArr}" value="dataStrArrInputId">-->
+
+ <div class="header">
+    <div class="header-in">
+       <div class="float-left"><h1>基于客流压力评估的上海轨道交通车站分级系统</h1></div>
+       <div class="float-right">
+           <a href="#">新建数据报告</a>
+           <a href="#">历史数据信息</a>
+           <a href="#">统计分析汇总</a>
+       </div>
+    </div>
+ </div>
+	
+ <div class="container">
+    <div class="card station-info">
+       <div class="card-in">
+           <div class="station-selected">
+               <img src="/images/img_complete.png">
+               <p>数据录入完成，选择时间段查看相应时间内车站各部分压力等级。</p>
+           </div>
+           <div>
+               <table>
+                   <tr>
+                       <td><b>车站名称</b></td><td>江苏路</td>
+                   </tr>
+<!--
+                   <tr>
+                       <td style="width: 40%"><b>高峰时间段</b></td>
+                       <td>
+                           <select>
+                               <option>7:00</option>
+                               <option>7:15</option>
+                               <option>15:15</option>
+                           </select>
+                           至
+                           <input type="text" readonly style="width: 40%" value="13:45">
+                       </td>
+                   </tr>
+-->
+                  
+               </table>
+           </div>
+          
+       </div> 
+    </div>
+    
+    <div class="five-part">
+        <div class="five-part-head"><span></span>生成压力等级<span></span></div>
+        <div class="row">
+            <a class="card col" href="#" data-toggle="modal" data-target="#zhantai"><div class="ss_zhantai"></div><span>站台</span></a>
+            <a class="card col" href="#" data-toggle="modal" data-target="#loufuti"><div class="ss_loufuti"></div><span>楼扶梯</span></a>
+            <a class="card col" id="gateResBtn"><div class="ss_zhaji"></div><span>闸机</span></a>
+            <a class="card col" href="#" data-toggle="modal" data-target="#huancheng"><div class="ss_huancheng"></div><span>换乘通道</span></a>
+            <a class="card col" id="entranceResBtn"><div class="ss_churu"></div><span>出入口</span></a>
+        </div>
+        <div class="row">
+            <a class="card col"  id="resultNewBtn" style="display: block;padding-top: 15px"><div class="station_pressure col-5 float-left" style="text-align: right"><img src="/images/pressure.png"></div><div class="col-7 float-left" style="text-align: left; line-height: 58px;">车站压力等级</div></a>
+        </div>
+    </div>
+    
+<!-- 楼扶梯 -->
+<div class="modal fade" id="loufuti" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title" id="myModalLabel">客流压力权重</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        
+      </div>
+        <div class="modal-body">
+            <div class="form-group col-12 float-left row">
+                <label for="" class="col-sm-4 col-form-label"></label>
+                <label for="" class="col-sm-4 col-form-label">高峰两小时客流量</label>
+                <label for="" class="col-sm-4 col-form-label">权重比例</label>
+            </div>
+            <div class="form-group col-12 float-left row">
+                <label for="" class="col-sm-4 col-form-label">2号线</label>
+                <div class="col-sm-4">
+                    <input type="text" class="form-control input-danwei" name="num2" value="44204">
+                </div>
+                <div class="col-sm-4">
+                    <input type="text" class="form-control input-danwei" name="percent2">
+                </div>
+            </div>
+            <div class="form-group col-12 float-left row">
+                <label for="" class="col-sm-4 col-form-label">11号线</label>
+                <div class="col-sm-4">
+                    <input type="text" class="form-control input-danwei" name="num11" value="19688">
+                </div>
+                <div class="col-sm-4">
+                    <input type="text" class="form-control input-danwei" name="percent11" >
+                </div>
+            </div>
+        </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" id="escalatorResBtn">下一步</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- 楼扶梯 --> 
+<!-- 站台 -->
+<div class="modal fade" id="zhantai" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title" id="myModalLabel">客流压力权重</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        
+      </div>
+        <div class="modal-body">
+            <div class="form-group col-12 float-left row">
+                <label for="" class="col-sm-4 col-form-label"></label>
+                <label for="" class="col-sm-4 col-form-label">高峰两小时客流量</label>
+                <label for="" class="col-sm-4 col-form-label">权重比例</label>
+            </div>
+            <div class="form-group col-12 float-left row">
+                <label for="" class="col-sm-4 col-form-label">2号线</label>
+                <div class="col-sm-4">
+                    <input type="text" class="form-control input-danwei" name="num2" value="44204">
+                </div>
+                <div class="col-sm-4">
+                    <input type="text" class="form-control input-danwei" name="percent2">
+                </div>
+            </div>
+            <div class="form-group col-12 float-left row">
+                <label for="" class="col-sm-4 col-form-label">11号线</label>
+                <div class="col-sm-4">
+                    <input type="text" class="form-control input-danwei" name="num11" value="19688">
+                </div>
+                <div class="col-sm-4">
+                    <input type="text" class="form-control input-danwei" name="percent11" >
+                </div>
+            </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" id="plateformResBtn">下一步</button>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+<!-- 站台 -->
+<!-- 换乘通道 -->
+<div class="modal fade" id="huancheng" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title" id="myModalLabel">客流压力权重</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        
+      </div>
+        <div class="modal-body">
+            <div class="form-group col-12 float-left row">
+                <label for="" class="col-sm-4 col-form-label"></label>
+                <label for="" class="col-sm-4 col-form-label">高峰两小时客流量</label>
+                <label for="" class="col-sm-4 col-form-label">权重比例</label>
+            </div>
+            <div class="form-group col-12 float-left row">
+                <label for="" class="col-sm-4 col-form-label">2号线</label>
+                <div class="col-sm-4">
+                    <input type="text" class="form-control input-danwei" name="num2" value="44204">
+                </div>
+                <div class="col-sm-4">
+                    <input type="text" class="form-control input-danwei" name="percent2">
+                </div>
+            </div>
+            <div class="form-group col-12 float-left row">
+                <label for="" class="col-sm-4 col-form-label">11号线</label>
+                <div class="col-sm-4">
+                    <input type="text" class="form-control input-danwei" name="num11" value="19688">
+                </div>
+                <div class="col-sm-4">
+                    <input type="text" class="form-control input-danwei" name="percent11" >
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="transferPassageResBtn">下一步</button>
+            </div>
+        </div>
+    </div>
+  </div>
+</div>
+<!-- 换乘通道 -->      
+    
+
+              
+</body>
+</html>  
