@@ -138,6 +138,7 @@ public class PressureCalculationController {
             String avgLevel = pressureCalculateService.calPlateformLevel( avgVal );
 
             model.addAttribute( "avgLevel", avgLevel );
+            System.out.println( "just for test" );
         }
 
 
