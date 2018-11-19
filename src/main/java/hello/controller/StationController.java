@@ -93,19 +93,28 @@ public class StationController {
 
 
         // 闸机压力
+        // 5分钟进出站数据
+        Integer[] fiveMinImportData = new Integer[]{
+                229, 244, 264, 285, 245, 248, 251, 255, 235, 190, 129, 154, 157, 181, 199, 181, 184, 162, 178, 130, 144, 150, 103, 108
+        };
+
+        Integer[] fiveMinExportData = new Integer[]{
+                209, 331, 324, 381, 401, 332, 469, 567, 508, 426, 548, 540, 400, 471, 409, 428, 340, 342, 253, 302, 253, 230, 241, 230
+        };
+
+
         Gate gate = stationAddParam.getGate();
 
         if ( gate != null ) {
+            // 进站安检
             List<Double> gateImportResList =
-                    pressureCalculateService.calGateImport( stationAddParam.getPlateform().getLineCode() + "",
-                            gate.getAvgArrIntTime(), gate.getAvgSecTime(),
-                            gate.getSecQueueArea(), stationAddParam.getGateStatisticsList());
+                    pressureCalculateService.calGateImportExport( stationAddParam.getPlateform().getLineCode() + "",
+                            Arrays.asList( fiveMinImportData ), 2, 1.5);
 
+            // 出闸机
             List<Double> gateExportResList =
-                    pressureCalculateService.calGateExport( stationAddParam.getPlateform().getLineCode() + "",
-                            gate.getExitGateNum(), gate.getGateWidth(), gate.getMaxQueueLength(),
-                            gate.getAvgPassExitGateTime(), gate.getAvgArrIntTimeExp(),
-                            stationAddParam.getGateStatisticsList());
+                    pressureCalculateService.calGateImportExport( stationAddParam.getPlateform().getLineCode() + "",
+                            Arrays.asList( fiveMinExportData ), 8, 1.77);
 
             pressureCalculateService.calGate( stationAddParam.getPlateform().getLineCode() + "",
                     gateImportResList, gateExportResList,

@@ -66,15 +66,15 @@ public class PressureCalculateServiceImpl implements PressureCalculateService {
     @Override
     public String calPlateformLevel( Double data ) {
         String res = null;
-        if ( data > 0 && data <= 0.2 )
+        if ( data > 0.75 && data <= 1.0 )
             res = "A";
-        else if ( data >0.2 && data <= 0.4 )
+        else if ( data >0.6 && data <= 0.75 )
             res = "B";
-        else if ( data >0.4 && data <= 0.6 )
+        else if ( data >0.45 && data <= 0.6 )
             res = "C";
-        else if ( data >0.6 && data <= 0.8 )
+        else if ( data >0.3 && data <= 0.45 )
             res = "D";
-        else if ( data >0.8 && data <= 1 )
+        else if ( data >0.0 && data <= 0.3 )
             res = "E";
         else
             res = "C";
@@ -83,15 +83,15 @@ public class PressureCalculateServiceImpl implements PressureCalculateService {
 
     private String calEscalatorLevel( Double data ) {
         String res = null;
-        if ( data > 0 && data <= 25 )
+        if ( data > 0 )
             res = "E";
-        else if ( data >25 && data <= 50 )
+        else if ( data > 0 && data <= 450 )
             res = "D";
-        else if ( data >50 && data <= 100 )
+        else if ( data >450 && data <= 1800 )
             res = "C";
-        else if ( data >100 && data <= 150 )
+        else if ( data >1800 && data <= 3000 )
             res = "B";
-        else if ( data >150 )
+        else if ( data >3000 )
             res = "A";
         else
             res = "C";
@@ -266,131 +266,53 @@ public class PressureCalculateServiceImpl implements PressureCalculateService {
         return res;
     }
 
+
     @Override
-    public List<Double> calGateImport(String lineCode, Double avgArrIntTime,
-                              Double avgSecTime, Double secQueueArea,
-                              List<GateStatistics> statisticsList) {
+    public List<Double> calGateImportExport(String code, List<Integer> fiveMinNums, Integer secNum, Double avgSecTime) {
+        List<String> resultList = new ArrayList<>();
+        // 用于计算加权平均值
+        List<Double> resultValList = new ArrayList<>();
 
-        // 平均到达间隔时间
-        Double a = avgArrIntTime;
-        // 平均过检时间
-        Double c = avgSecTime;
-        // 安检入口可供排队区域的面积
-        Double s = secQueueArea;
+        // 平均过检时间1.5s
+        Double ts = avgSecTime;
 
+        int count = 0;
+        Double resultMax = 0.0;
+        for ( Integer q5min : fiveMinNums ) {
 
-        List<Double> resultList = new ArrayList<>();
+            q5min = q5min / secNum;
 
+            // 计算该五分钟内，客流达到率λ_5min
+            Double lamda5min = q5min * 1.0 / 300;
 
-        for ( GateStatistics gateStatistics : statisticsList ) {
+            // 计算五分钟内安检处的服务率μ_5min
+            Double u5min = 1 / ts;
 
-            // 最大排队人数
-            Integer b = gateStatistics.getMaxSecQueueNumber();
+            Double result = lamda5min / u5min;
 
-            // 最大排队人数持续的时间
-            Double e = gateStatistics.getMaxSecQueueTime();
+            // 每3个取最大的放大list中
 
-            // 每位乘客的平均排队时间
-            Double t = 0.0;
+            if ( count % 3 != 0 ) {
 
+                if ( result > resultMax ) {
+                    resultMax = result;
+                }
 
-            t = ( ( b - 1 ) * c + b * c + e * b * c / a ) / ( b + e / a );
+                if ( count % 3 == 2 ) {
+                    resultValList.add( resultMax );
+//                    resultList.add( calGateLevel( resultMax ) );
 
-            // 过闸效率指标q
-            Double q = t / 60;
-
-            // 密度指标p
-            Double p = b*0.28/s;
-
-            // 闸机客流压力综合评价模型建立 默认s1和s2为0.5
-            Double result = 0.5 * q + 0.5 * p;
-
-            resultList.add( result );
-
-        }
-
-        return resultList;
-
-    }
-
-
-    /**
-     *
-     * @param lineCode
-     * @param exitGateNum 出站闸机数量
-     * @param gateWidth 每个闸机的宽度
-     * @param maxQueueLength 出站闸机后可供排队的长度
-     * @param avgPassExitGateTime 平均过闸时间
-     * @param avgArrIntTimeExp 平均到达间隔时间
-     * @param statisticsList
-     */
-    @Override
-    public List<Double> calGateExport(String lineCode, Integer exitGateNum,
-                              Double gateWidth, Double maxQueueLength,
-                              Double avgPassExitGateTime, Double avgArrIntTimeExp,
-                              List<GateStatistics> statisticsList) {
-        // 出站闸机数量
-        Integer n = exitGateNum;
-        // 每个闸机的宽度
-        Double r = gateWidth;
-        // 出站闸机后可供排队的长度
-        Double d = maxQueueLength;
-        // 平均到达间隔时间
-        Double a = avgArrIntTimeExp;
-        // 平均过闸时间
-        Double c = avgPassExitGateTime;
-
-        List<Double> resultList = new ArrayList<>();
-
-        for ( GateStatistics gateStatistics : statisticsList ) {
-
-            // 最大出闸排队人数数组str 12,12,166
-            String maxExitNumberArrStr = gateStatistics.getMaxExitNumber();
-
-            String[] maxExitNumberArr = maxExitNumberArrStr.split(",");
-
-            // 最大出闸排队人数持续时间数组str
-            String maxExitQueueTimeArrStr = gateStatistics.getMaxExitQueueTime();
-
-            String[] maxExitQueueTimeArr = maxExitQueueTimeArrStr.split( "," );
-
-            // 每位乘客的平均排队时间t
-            Double tAvg = 0.0;
-            for ( int i = 0; i < maxExitNumberArr.length; i++ ) {
-
-                // 最大出闸排队人数
-                Integer b = Integer.valueOf( maxExitNumberArr[i] );
-
-                // 最大出闸排队人数持续时间
-                Double e = Double.valueOf( maxExitQueueTimeArr[i] );
-
-
-                // 每位乘客的平均排队时间t
-                Double t = ( ( b - 1 ) * c + b * c + e * b * c / a ) / ( b + e / a );
-
-                tAvg += t;
+                }
 
             }
+            else {
+                resultMax = result;
+            }
 
-            tAvg = tAvg / maxExitNumberArr.length;
-
-            // 过闸效率指标k
-            Double k = tAvg / 60;
-
-            // 密度指标w TODO
-            Double w = 0.0;
-
-
-            // 闸机客流压力综合评价模型建立
-            Double result = 0.5 * k;
-
-            resultList.add( result );
+            count++;
 
         }
-
-        return resultList;
-
-
+        return resultValList;
     }
 
     @Override
@@ -544,5 +466,26 @@ public class PressureCalculateServiceImpl implements PressureCalculateService {
 
     }
 
+    @Override
+    public String calGateLevel(Double data) {
+        String res = null;
+        if ( data >= 1 )
+            res = "A";
+        else if ( data >= 0.6 && data < 1 )
+            res = "B";
+        else if ( data >= 0.3 && data < 0.6 )
+            res = "C";
+        else if ( data >=0.1 && data < 0.3 )
+            res = "D";
+        else if ( data > 0.1 && data < 0.0 )
+            res = "E";
+        else
+            res = "C";
+        return res;
+    }
 
+    @Override
+    public Double calGateScore(Double data) {
+        return data * 100;
+    }
 }

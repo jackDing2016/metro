@@ -51,9 +51,21 @@ public interface PressureCalculateService {
      * @param avgSecTime 平均过检时间
      * @param secQueueArea 安检入口排队区域面积
      */
-    List<Double> calGateImport( String lineCode, Double avgArrIntTime,
-                       Double avgSecTime, Double secQueueArea,
-                       List<GateStatistics> statisticsList );
+//    List<Double> calGateImport( String lineCode, Double avgArrIntTime,
+//                       Double avgSecTime, Double secQueueArea,
+//                       List<GateStatistics> statisticsList );
+
+    /**
+     * 计算进/出闸
+     * @param code
+     * @param fiveMinNums 每五分钟进/出站人数
+     * @param secNum    安检个数/ 出闸个数
+     * @param avgSecTime    平均过检时间/平均过闸时间
+     * @return
+     */
+    List<Double> calGateImportExport( String code, List<Integer> fiveMinNums,
+                                Integer secNum, Double avgSecTime );
+
 
     /**
      * 计算出闸
@@ -64,10 +76,11 @@ public interface PressureCalculateService {
      * @param avgPassExitGateTime 平均过闸时间
      * @param avgArrIntTimeExp 平均到达间隔时间
      */
-    List<Double> calGateExport( String lineCode, Integer exitGateNum,
-                        Double gateWidth, Double maxQueueLength,
-                        Double avgPassExitGateTime, Double avgArrIntTimeExp,
-                        List<GateStatistics> statisticsList);
+//    List<Double> calGateExport( String lineCode, Integer exitGateNum,
+//                        Double gateWidth, Double maxQueueLength,
+//                        Double avgPassExitGateTime, Double avgArrIntTimeExp,
+//                        List<GateStatistics> statisticsList);
+
 
     /**
      * 计算总的闸机结果
@@ -118,6 +131,10 @@ public interface PressureCalculateService {
 
     String calTransferPassageLevel( Double data );
 
+
+    String calGateLevel( Double data );
+
+    Double calGateScore( Double data );
 
 
 }
