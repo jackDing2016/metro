@@ -139,6 +139,7 @@ public class PressureCalculationController {
 
             model.addAttribute( "avgLevel", avgLevel );
             System.out.println( "just for test" );
+            System.out.println( "just for test two" );
         }
 
 
