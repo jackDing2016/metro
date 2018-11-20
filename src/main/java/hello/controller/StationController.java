@@ -1,5 +1,6 @@
 package hello.controller;
 
+import hello.constant.MetroConstant;
 import hello.entity.*;
 import hello.param.StationAddParam;
 import hello.service.PressureCalculateService;
@@ -44,49 +45,29 @@ public class StationController {
             produces = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody String calculateData(
             @RequestBody StationAddParam stationAddParam) {
-        // 数据
-        Integer[] importNumberArr = new Integer[]{ 650, 733, 640, 584, 608, 508, 414, 333  };
 
-        Integer[] transferIntoNumberArr = new Integer[] {3636, 3636, 3636, 3636, 3636, 3636, 3636, 3636 };
-
-        Integer[] exportNumberArr = new Integer[]{ 1098, 1360, 1649, 2073, 1513, 1230, 972, 747 };
-
-        Integer[] transferOutNumberArr = new Integer[]{ 868, 868, 868, 868, 868, 868, 868, 868};
-
-        Integer[] importNumberArr2 = new Integer[]{ 525, 548, 462, 383, 414, 334, 252, 217  };
-
-        Integer[] transferIntoNumberArr2 = new Integer[]{ 868, 868, 868, 868, 868, 868, 868, 868};
-
-        Integer[] exportNumberArr2 = new Integer[]{ 1061, 1184, 1611, 1897, 1425, 1183, 679, 564 };
-
-        Integer[] transferOutNumberArr2 = new Integer[] {3636, 3636, 3636, 3636, 3636, 3636, 3636, 3636 };
-
-        // 站台压力 2号线  start
+        // 站台压力  start
         // plateformArea:2083
+        Plateform plateform =  stationAddParam.getPlateform();
+        String lineCode = plateform.getLineCode() + "";
+        String stationName = "jiangsuRoad";
 
-        pressureCalculateService.calPlateform( "2", 2083.2,
-                Arrays.asList(importNumberArr), Arrays.asList(transferIntoNumberArr),
-                Arrays.asList(exportNumberArr), Arrays.asList(transferOutNumberArr));
-        // 站台压力 2号线  end
+        Map<String, Object> lineDataMap =
+            pressureCalculateService.getLineDataMap( lineCode );
 
-        // 站台压力 11 号线 start
+        pressureCalculateService.calPlateform( lineCode, plateform.getEffectiveArea(),
+                Arrays.asList( ( Integer[] ) lineDataMap.get( MetroConstant.KEY_IMPORTNUMBERARR + stationName ) ),
+                Arrays.asList( ( Integer[] ) lineDataMap.get( MetroConstant.KEY_TRANSFERINTONUMBERARR + stationName ) ),
+                Arrays.asList( ( Integer[] ) lineDataMap.get( MetroConstant.KEY_EXPORTNUMBERARR + stationName ) ),
+                Arrays.asList( ( Integer[] ) lineDataMap.get( MetroConstant.KEY_TRANSFEROUTNUMBERARR + stationName ) ));
 
-        pressureCalculateService.calPlateform( "11", 2083.2,
-                Arrays.asList(importNumberArr2), Arrays.asList(transferIntoNumberArr2),
-                Arrays.asList(exportNumberArr2), Arrays.asList(transferOutNumberArr2));
-        // 站台压力 11 号线 end
+        // 站台压力  end
 
-        Map<String, Object> plateformMap = pressureCalculateService.getPlateformResultMap();
-        System.out.println( plateformMap );
 
         // 楼扶梯压力
-        // 2号线
-        pressureCalculateService.calEscalator("2", 4,
-                Arrays.asList(exportNumberArr), Arrays.asList(transferOutNumberArr),
-                0.5, 130.0);
-        // 11号线
-        pressureCalculateService.calEscalator("11", 4,
-                Arrays.asList(exportNumberArr2), Arrays.asList(transferOutNumberArr2),
+        pressureCalculateService.calEscalator(lineCode, 4,
+                Arrays.asList( ( Integer[] ) lineDataMap.get( MetroConstant.KEY_EXPORTNUMBERARR + stationName ) ),
+                Arrays.asList( ( Integer[] ) lineDataMap.get( MetroConstant.KEY_TRANSFEROUTNUMBERARR + stationName ) ),
                 0.5, 130.0);
 
 
