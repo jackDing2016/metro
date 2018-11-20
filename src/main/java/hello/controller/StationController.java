@@ -3,6 +3,7 @@ package hello.controller;
 import hello.constant.MetroConstant;
 import hello.entity.*;
 import hello.param.StationAddParam;
+import hello.service.LineDataService;
 import hello.service.PressureCalculateService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -20,6 +21,9 @@ public class StationController {
 
     @Autowired
     private PressureCalculateService pressureCalculateService;
+
+    @Autowired
+    private LineDataService lineDataService;
 
 
     @GetMapping("/toAddDetailPage")
@@ -46,15 +50,16 @@ public class StationController {
     public @ResponseBody String calculateData(
             @RequestBody StationAddParam stationAddParam) {
 
-        // 站台压力  start
-        // plateformArea:2083
+
         Plateform plateform =  stationAddParam.getPlateform();
         String lineCode = plateform.getLineCode() + "";
         String stationName = "jiangsuRoad";
 
         Map<String, Object> lineDataMap =
-            pressureCalculateService.getLineDataMap( lineCode );
+            lineDataService.getLineDataMap( lineCode );
 
+        // 站台压力  start
+        // plateformArea:2083
         pressureCalculateService.calPlateform( lineCode, plateform.getEffectiveArea(),
                 Arrays.asList( ( Integer[] ) lineDataMap.get( MetroConstant.KEY_IMPORTNUMBERARR + stationName ) ),
                 Arrays.asList( ( Integer[] ) lineDataMap.get( MetroConstant.KEY_TRANSFERINTONUMBERARR + stationName ) ),
@@ -76,30 +81,23 @@ public class StationController {
 
 
         // 闸机压力
-        // 5分钟进出站数据
-        Integer[] fiveMinImportData = new Integer[]{
-                229, 244, 264, 285, 245, 248, 251, 255, 235, 190, 129, 154, 157, 181, 199, 181, 184, 162, 178, 130, 144, 150, 103, 108
-        };
-
-        Integer[] fiveMinExportData = new Integer[]{
-                209, 331, 324, 381, 401, 332, 469, 567, 508, 426, 548, 540, 400, 471, 409, 428, 340, 342, 253, 302, 253, 230, 241, 230
-        };
-
 
         Gate gate = stationAddParam.getGate();
 
         if ( gate != null ) {
             // 进站安检
             List<Double> gateImportResList =
-                    pressureCalculateService.calGateImportExport( stationAddParam.getPlateform().getLineCode() + "",
-                            Arrays.asList( fiveMinImportData ), 2, 1.5);
+                    pressureCalculateService.calGateImportExport( lineCode,
+                            Arrays.asList( ( Integer[] ) lineDataMap.get( MetroConstant.KEY_5MINIMPORTNUMBERARR + stationName ) ),
+                            gate.getSecNum(), gate.getAvgSecTime());
 
             // 出闸机
             List<Double> gateExportResList =
-                    pressureCalculateService.calGateImportExport( stationAddParam.getPlateform().getLineCode() + "",
-                            Arrays.asList( fiveMinExportData ), 8, 1.77);
+                    pressureCalculateService.calGateImportExport( lineCode,
+                            Arrays.asList( ( Integer[] ) lineDataMap.get( MetroConstant.KEY_5MINEXPORTNUMBERARR + stationName ) ),
+                            gate.getExitGateNum(), gate.getAvgPassExitGateTime());
 
-            pressureCalculateService.calGate( stationAddParam.getPlateform().getLineCode() + "",
+            pressureCalculateService.calGate( lineCode,
                     gateImportResList, gateExportResList,
                     gate.getWeitghEntrance(), gate.getWeightExit());
         }
@@ -122,12 +120,7 @@ public class StationController {
 
         }
 
-
-
-
         return "success";
     }
-
-
 
 }

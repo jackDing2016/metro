@@ -5,8 +5,6 @@ import hello.constant.PressureTypeEnum;
 import hello.entity.*;
 import hello.param.StationAddParam;
 import hello.service.PressureCalculateService;
-import jnr.ffi.annotations.In;
-import org.python.antlr.ast.Str;
 import org.springframework.stereotype.Service;
 
 import java.io.BufferedReader;
@@ -27,44 +25,9 @@ public class PressureCalculateServiceImpl implements PressureCalculateService {
 
     private static Map<String, Object> transferPassageMap = new HashMap<>();
 
-    private static Map<String, Object> lineData_2 = new HashMap<>();
-
-    private static Map<String, Object> lineData_11 = new HashMap<>();
-
-    public static Map<String, Object> lineData_all = new HashMap<>();
-
-    static {
 
 
-        lineData_2.put( MetroConstant.KEY_IMPORTNUMBERARR  + "jiangsuRoad",
-                new Integer[]{ 650, 733, 640, 584, 608, 508, 414, 333  } );
 
-        lineData_2.put( MetroConstant.KEY_TRANSFERINTONUMBERARR  + "jiangsuRoad",
-                new Integer[] {3636, 3636, 3636, 3636, 3636, 3636, 3636, 3636 });
-
-        lineData_2.put( MetroConstant.KEY_EXPORTNUMBERARR  + "jiangsuRoad",
-                new Integer[]{ 1098, 1360, 1649, 2073, 1513, 1230, 972, 747 });
-
-        lineData_2.put( MetroConstant.KEY_TRANSFEROUTNUMBERARR  + "jiangsuRoad",
-                new Integer[]{ 868, 868, 868, 868, 868, 868, 868, 868});
-
-
-        lineData_11.put( MetroConstant.KEY_IMPORTNUMBERARR  + "jiangsuRoad",
-                new Integer[]{ 525, 548, 462, 383, 414, 334, 252, 217  } );
-
-        lineData_11.put( MetroConstant.KEY_TRANSFERINTONUMBERARR  + "jiangsuRoad",
-                new Integer[]{ 868, 868, 868, 868, 868, 868, 868, 868});
-
-        lineData_11.put( MetroConstant.KEY_EXPORTNUMBERARR  + "jiangsuRoad",
-                new Integer[]{ 1061, 1184, 1611, 1897, 1425, 1183, 679, 564 });
-
-        lineData_11.put( MetroConstant.KEY_TRANSFEROUTNUMBERARR  + "jiangsuRoad",
-                new Integer[] {3636, 3636, 3636, 3636, 3636, 3636, 3636, 3636 });
-
-        lineData_all.put( "lineData_2", lineData_2 );
-        lineData_all.put( "lineData_11", lineData_11);
-
-    }
 
     @Override
     public Map<String, Object> getEntranceResultMap() {
@@ -550,8 +513,5 @@ public class PressureCalculateServiceImpl implements PressureCalculateService {
         return data * 100;
     }
 
-    @Override
-    public Map<String, Object> getLineDataMap(String lineCode) {
-        return (Map<String, Object>) lineData_all.get( MetroConstant.KEY_LINEDATA + lineCode );
-    }
+
 }

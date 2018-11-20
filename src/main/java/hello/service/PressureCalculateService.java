@@ -136,7 +136,4 @@ public interface PressureCalculateService {
 
     Double calGateScore( Double data );
 
-    Map<String, Object> getLineDataMap( String lineCode );
-
-
 }

@@ -37,13 +37,14 @@ public class Gate extends Model<Gate> {
     // 安检入口排队区域面积
     private Double secQueueArea;
 
+    // 安检个数
+    private Integer secNum;
+
     // 平均过检时间
     private Double avgSecTime;
 
     // 平均到达间隔时间
     private Double avgArrIntTime;
-
-
 
     // 出站闸机数量
     private Integer exitGateNum;
