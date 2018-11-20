@@ -62,6 +62,8 @@ public class StationController {
         Integer[] transferOutNumberArr2 = new Integer[] {3636, 3636, 3636, 3636, 3636, 3636, 3636, 3636 };
 
         // 站台压力 2号线  start
+        // plateformArea:2083
+
         pressureCalculateService.calPlateform( "2", 2083.2,
                 Arrays.asList(importNumberArr), Arrays.asList(transferIntoNumberArr),
                 Arrays.asList(exportNumberArr), Arrays.asList(transferOutNumberArr));

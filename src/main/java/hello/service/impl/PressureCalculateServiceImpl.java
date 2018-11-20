@@ -276,42 +276,44 @@ public class PressureCalculateServiceImpl implements PressureCalculateService {
         // 平均过检时间1.5s
         Double ts = avgSecTime;
 
-        int count = 0;
-        Double resultMax = 0.0;
+//        int count = 0;
+//        Double resultMax = 0.0;
         for ( Integer q5min : fiveMinNums ) {
 
-            q5min = q5min / secNum;
+//            q5min = q5min / secNum;
 
             // 计算该五分钟内，客流达到率λ_5min
-            Double lamda5min = q5min * 1.0 / 300;
+            Double lamda5min = q5min * 1.0 / ( 300 * secNum );
 
             // 计算五分钟内安检处的服务率μ_5min
             Double u5min = 1 / ts;
 
             Double result = lamda5min / u5min;
 
-            // 每3个取最大的放大list中
+            resultValList.add( result );
 
-            if ( count % 3 != 0 ) {
+            System.out.println( "export or / import result is " + result );
 
-                if ( result > resultMax ) {
-                    resultMax = result;
-                }
-
-                if ( count % 3 == 2 ) {
-                    resultValList.add( resultMax );
-//                    resultList.add( calGateLevel( resultMax ) );
-
-                }
-
-            }
-            else {
-                resultMax = result;
-            }
-
-            count++;
+//            // 每3个取最大的放大list中
+//            if ( count % 3 != 0 ) {
+//                if ( result > resultMax ) {
+//                    resultMax = result;
+//                }
+//
+//                if ( count % 3 == 2 ) {
+//                    resultValList.add( resultMax );
+//                }
+//
+//            }
+//            else {
+//                resultMax = result;
+//            }
+//
+//            count++;
 
         }
+
+        System.out.println( "loop end" );
         return resultValList;
     }
 
@@ -326,12 +328,32 @@ public class PressureCalculateServiceImpl implements PressureCalculateService {
         // 存值(用于计算各条线路的加权值)
         List<Double> resultValList = new ArrayList<>();
 
-
+        int count = 0;
+        Double resultMax = 0.0;
         for ( int i = 0; i < gateImportResultList.size(); i++ ) {
+
             Double result = gateImportResultList.get(i) * weitghEntrance + gateExportResultList.get(i) * weightExit;
 
-            resultList.add( calPlateformLevel( result ) );
-            resultValList.add( result );
+            System.out.println( "result is " + result );
+
+            // 每3个取最大的放大list中
+            if ( count % 3 != 0 ) {
+                if ( result > resultMax ) {
+                    resultMax = result;
+                }
+
+                if ( count % 3 == 2 ) {
+                    resultList.add( calPlateformLevel( resultMax ) );
+                    resultValList.add( resultMax );
+                }
+
+            }
+            else {
+                resultMax = result;
+            }
+
+            count++;
+
         }
 
         gateMap.put( "line" + lineCode, resultList );
