@@ -401,7 +401,7 @@ var getData = function () {
     // 闸机基本信息
     var gate = {};
 
-    $.each( $( '#gateForm:visible' ).serializeArray(), function ( index, value ) {
+    $.each( $( 'form[name=gateForm]:visible' ).serializeArray(), function ( index, value ) {
         gate[ value.name ] = value.value;
     } ) ;
 

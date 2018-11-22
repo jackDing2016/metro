@@ -1,8 +1,12 @@
 package hello.controller;
 
+import com.baomidou.mybatisplus.core.conditions.Wrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import hello.constant.MetroConstant;
 import hello.entity.*;
 import hello.param.StationAddParam;
+import hello.service.FiveMinuteTrafficService;
+import hello.service.GateService;
 import hello.service.LineDataService;
 import hello.service.PressureCalculateService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +14,7 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -24,6 +29,12 @@ public class StationController {
 
     @Autowired
     private LineDataService lineDataService;
+
+    @Autowired
+    private FiveMinuteTrafficService fiveMinuteTrafficService;
+
+    @Autowired
+    private GateService gateService;
 
 
     @GetMapping("/toAddDetailPage")
@@ -81,15 +92,37 @@ public class StationController {
 
 
         // 闸机压力
-
         Gate gate = stationAddParam.getGate();
+
+
+        FiveMinuteTraffic fiveMinuteTrafficQuery = new FiveMinuteTraffic();
+        QueryWrapper<FiveMinuteTraffic> wrapper = new QueryWrapper<>( fiveMinuteTrafficQuery );
+
+        wrapper.between( "data_order", 3, 26 );
+        wrapper.orderByAsc( "data_order" );
+
+//        wrapper.gt
+        List< FiveMinuteTraffic > fiveMinuteTraffics =
+            fiveMinuteTrafficService.list( wrapper );
+        List<Integer> fiveMinuteTrafficDataList = new ArrayList<>();
+        for ( FiveMinuteTraffic fiveMinuteTraffic : fiveMinuteTraffics ) {
+            fiveMinuteTrafficDataList.add( fiveMinuteTraffic.getTrafficNum() );
+        }
+
 
         if ( gate != null ) {
             // 进站安检
+//            List<Double> gateImportResList =
+//                    pressureCalculateService.calGateImportExport( lineCode,
+//                            Arrays.asList( ( Integer[] ) lineDataMap.get( MetroConstant.KEY_5MINIMPORTNUMBERARR + stationName ) ),
+//                            gate.getSecNum(), gate.getAvgSecTime());
+
             List<Double> gateImportResList =
                     pressureCalculateService.calGateImportExport( lineCode,
-                            Arrays.asList( ( Integer[] ) lineDataMap.get( MetroConstant.KEY_5MINIMPORTNUMBERARR + stationName ) ),
+                            fiveMinuteTrafficDataList,
                             gate.getSecNum(), gate.getAvgSecTime());
+
+
 
             // 出闸机
             List<Double> gateExportResList =
@@ -121,6 +154,20 @@ public class StationController {
         }
 
         return "success";
+    }
+
+    @GetMapping( value = "/testSaveGate")
+    @ResponseBody
+    public String testSaveGate() {
+
+        Gate gate = new Gate();
+
+        gate.setWeitghEntrance( 0.5 );
+
+        gateService.save( gate );
+
+        return "save success";
+
     }
 
 }
