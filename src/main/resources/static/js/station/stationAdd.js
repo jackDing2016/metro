@@ -391,7 +391,7 @@ var getData = function () {
     // 扶梯基本信息
     var escalator = {};
 
-    $.each( $( '#escalatorForm' ).serializeArray(), function ( index, value ) {
+    $.each( $( 'form[name=escalatorForm]:visible' ).serializeArray(), function ( index, value ) {
         escalator[ value.name ] = value.value;
     } ) ;
 

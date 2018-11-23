@@ -32,11 +32,14 @@ public class Escalator extends Model<Escalator> {
 
     private Double plateEffLength;
 
+    // 站台楼扶梯组数
     private Integer plateEscalatorNum;
 
+    // 楼梯总宽度
     private Double floorWidth;
 
-    private String tEscalatorcol;
+    // 上行扶梯总宽度
+    private Double upEscalatorWidth;
 
     private Integer plateformCode;
 

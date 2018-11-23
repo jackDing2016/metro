@@ -39,10 +39,13 @@ public interface PressureCalculateService {
      * @param transferOutNumber 换出人数
      * @param  walkSpeed 下车乘客在站台上的行走速度 0.5
      * @param  plateformLength 站台长度 140
+     * @param  upEscalatorWidth 上行扶梯总宽度
+     * @param  floorWidth   楼梯总宽度
      */
     void calEscalator( String lineCode, Integer plateEscalatorNum,
                        List<Integer> exportNumber, List<Integer> transferOutNumber,
-                       Double walkSpeed, Double plateformLength);
+                       Double walkSpeed, Double plateformLength,
+                       Double upEscalatorWidth, Double floorWidth);
 
     /**
      * 计算进闸

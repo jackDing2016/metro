@@ -191,7 +191,8 @@ public class PressureCalculateServiceImpl implements PressureCalculateService {
     @Override
     public void calEscalator(String lineCode, Integer plateEscalatorNum,
                              List<Integer> exportNumber, List<Integer> transferOutNumber,
-                             Double walkSpeed, Double plateformLength) {
+                             Double walkSpeed, Double plateformLength,
+                             Double upEscalatorWidth, Double floorWidth) {
 
 
         List<String> resultList = new ArrayList<>();
@@ -210,14 +211,8 @@ public class PressureCalculateServiceImpl implements PressureCalculateService {
             // 楼梯通过能力
             Double cFloor = 0.89;
 
-            // 扶梯宽度
-            Double escalatorLength = 1.0;
-
-            // 楼梯宽度
-            Double floorLength = 3.0;
-
             // 排队系统输出率
-            Double u = cEscalator * escalatorLength + cFloor * floorLength;
+            Double u = cEscalator * upEscalatorWidth / plateEscalatorNum + cFloor * floorWidth / plateEscalatorNum;
 
             // 输出时间
             Double t1 = w / ( plateEscalatorNum * u );

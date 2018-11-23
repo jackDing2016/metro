@@ -3,12 +3,11 @@ package hello.controller;
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import hello.constant.MetroConstant;
+import hello.constant.TimeIntervalTypeEnum;
+import hello.constant.TrafficTypeEnum;
 import hello.entity.*;
 import hello.param.StationAddParam;
-import hello.service.FiveMinuteTrafficService;
-import hello.service.GateService;
-import hello.service.LineDataService;
-import hello.service.PressureCalculateService;
+import hello.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
@@ -31,7 +30,7 @@ public class StationController {
     private LineDataService lineDataService;
 
     @Autowired
-    private FiveMinuteTrafficService fiveMinuteTrafficService;
+    private TrafficDataService trafficDataService;
 
     @Autowired
     private GateService gateService;
@@ -81,10 +80,17 @@ public class StationController {
 
 
         // 楼扶梯压力
-        pressureCalculateService.calEscalator(lineCode, 4,
-                Arrays.asList( ( Integer[] ) lineDataMap.get( MetroConstant.KEY_EXPORTNUMBERARR + stationName ) ),
-                Arrays.asList( ( Integer[] ) lineDataMap.get( MetroConstant.KEY_TRANSFEROUTNUMBERARR + stationName ) ),
-                0.5, 130.0);
+
+        Escalator escalator = stationAddParam.getEscalator();
+
+        if ( escalator != null ) {
+
+            pressureCalculateService.calEscalator(lineCode, escalator.getPlateEscalatorNum(),
+                    Arrays.asList( ( Integer[] ) lineDataMap.get( MetroConstant.KEY_EXPORTNUMBERARR + stationName ) ),
+                    Arrays.asList( ( Integer[] ) lineDataMap.get( MetroConstant.KEY_TRANSFEROUTNUMBERARR + stationName ) ),
+                    0.5, escalator.getPlateEffLength(), escalator.getUpEscalatorWidth(), escalator.getFloorWidth());
+
+        }
 
 
         // 出入口压力
@@ -95,20 +101,9 @@ public class StationController {
         Gate gate = stationAddParam.getGate();
 
 
-        FiveMinuteTraffic fiveMinuteTrafficQuery = new FiveMinuteTraffic();
-        QueryWrapper<FiveMinuteTraffic> wrapper = new QueryWrapper<>( fiveMinuteTrafficQuery );
-
-        wrapper.between( "data_order", 3, 26 );
-        wrapper.orderByAsc( "data_order" );
-
-//        wrapper.gt
-        List< FiveMinuteTraffic > fiveMinuteTraffics =
-            fiveMinuteTrafficService.list( wrapper );
-        List<Integer> fiveMinuteTrafficDataList = new ArrayList<>();
-        for ( FiveMinuteTraffic fiveMinuteTraffic : fiveMinuteTraffics ) {
-            fiveMinuteTrafficDataList.add( fiveMinuteTraffic.getTrafficNum() );
-        }
-
+        List<Integer> fiveMinuteTrafficDataList =
+            trafficDataService.getDataList(TrafficTypeEnum.IMPORT, TimeIntervalTypeEnum.FIVE_MINUTE,
+                    3, 26);
 
         if ( gate != null ) {
             // 进站安检

@@ -1,9 +1,7 @@
 package hello.service.impl;
 
 import hello.constant.MetroConstant;
-import hello.service.FiveMinuteTrafficService;
 import hello.service.LineDataService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
