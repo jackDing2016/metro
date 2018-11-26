@@ -2,9 +2,14 @@ package hello.service.impl;
 
 import hello.constant.MetroConstant;
 import hello.constant.PressureTypeEnum;
+import hello.constant.TimeIntervalTypeEnum;
+import hello.constant.TrafficTypeEnum;
 import hello.entity.*;
 import hello.param.StationAddParam;
 import hello.service.PressureCalculateService;
+import hello.service.TrafficDataService;
+import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.BufferedReader;
@@ -26,7 +31,8 @@ public class PressureCalculateServiceImpl implements PressureCalculateService {
     private static Map<String, Object> transferPassageMap = new HashMap<>();
 
 
-
+    @Autowired
+    private TrafficDataService trafficDataService;
 
 
     @Override
@@ -168,12 +174,22 @@ public class PressureCalculateServiceImpl implements PressureCalculateService {
 
         List<Entrance> entrances = stationAddParam.getEntrances();
 
+        String lineCode = stationAddParam.getPlateform().getLineCode() + "";
+
         for ( Entrance entrance : entrances ) {
 
             StringBuffer inputArrSb = new StringBuffer();
 
+
+
+
+            List<Integer> referenceDataList =
+                trafficDataService.getDataList( TrafficTypeEnum.IMPORT, TimeIntervalTypeEnum.FIVE_MINUTE ,
+                       3, 26,  lineCode );
+
             // reference data
-            String referenceData = "758,723,866,913,926,914,789,854,833,720,643,692,748,702,572,387,806,932,1042,953,1070,945,610,606";
+            // String referenceData = "758,723,866,913,926,914,789,854,833,720,643,692,748,702,572,387,806,932,1042,953,1070,945,610,606";
+            String referenceData = StringUtils.join( referenceDataList, "," );
 
             List<EntranceStatistics> entranceStatisticsList = entrance.getEntranceStatisticsList();
             for ( EntranceStatistics entranceStatistics : entranceStatisticsList ) {
@@ -182,7 +198,7 @@ public class PressureCalculateServiceImpl implements PressureCalculateService {
 
             String inputData = inputArrSb.toString().substring( 0, inputArrSb.lastIndexOf( "," ) );
 
-            calEntrance( stationAddParam.getPlateform().getLineCode() + "",  referenceData, inputData);
+            calEntrance( lineCode,  referenceData, inputData);
 
         }
 

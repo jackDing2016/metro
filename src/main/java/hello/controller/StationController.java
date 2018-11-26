@@ -103,7 +103,7 @@ public class StationController {
 
         List<Integer> fiveMinuteTrafficDataList =
             trafficDataService.getDataList(TrafficTypeEnum.IMPORT, TimeIntervalTypeEnum.FIVE_MINUTE,
-                    3, 26);
+                    3, 26, lineCode);
 
         if ( gate != null ) {
             // 进站安检
