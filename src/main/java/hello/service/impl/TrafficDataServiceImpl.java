@@ -27,12 +27,13 @@ public class TrafficDataServiceImpl extends ServiceImpl<TrafficDataMapper, Traff
     @Override
     public List<Integer> getDataList(TrafficTypeEnum trafficTypeEnum,
                                      TimeIntervalTypeEnum timeIntervalTypeEnum, Integer startOrder, Integer endOrder,
-                                     String lineCode) {
+                                     String lineCode, String stationName) {
 
         TrafficData trafficDataQuery = new TrafficData();
         trafficDataQuery.setTrafficType( Integer.parseInt( trafficTypeEnum.getCode() ) );
         trafficDataQuery.setTimeIntervalType( Integer.parseInt( timeIntervalTypeEnum.getCode() ) );
         trafficDataQuery.setLineCode( lineCode );
+        trafficDataQuery.setStationName( stationName );
         QueryWrapper<TrafficData> wrapper = new QueryWrapper<>( trafficDataQuery );
 
         wrapper.between( "data_order", startOrder, endOrder );

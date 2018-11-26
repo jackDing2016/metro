@@ -32,6 +32,8 @@ public class Plateform extends Model<Plateform> {
 
     private String name;
 
+    private String stationNameCode;
+
     private Integer stationCode;
 
     private Double effectiveArea;

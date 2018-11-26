@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.text.DecimalFormat;
 import java.util.*;
 
 @Service
@@ -176,6 +177,8 @@ public class PressureCalculateServiceImpl implements PressureCalculateService {
 
         String lineCode = stationAddParam.getPlateform().getLineCode() + "";
 
+        String stationNameCode = stationAddParam.getPlateform().getStationNameCode();
+
         for ( Entrance entrance : entrances ) {
 
             StringBuffer inputArrSb = new StringBuffer();
@@ -185,7 +188,7 @@ public class PressureCalculateServiceImpl implements PressureCalculateService {
 
             List<Integer> referenceDataList =
                 trafficDataService.getDataList( TrafficTypeEnum.IMPORT, TimeIntervalTypeEnum.FIVE_MINUTE ,
-                       3, 26,  lineCode );
+                       3, 26,  lineCode, stationNameCode );
 
             // reference data
             // String referenceData = "758,723,866,913,926,914,789,854,833,720,643,692,748,702,572,387,806,932,1042,953,1070,945,610,606";
@@ -263,20 +266,8 @@ public class PressureCalculateServiceImpl implements PressureCalculateService {
 
     @Override
     public String calPlateformScore(Double data) {
-        String res = null;
-        if ( data > 0 && data <= 0.2 )
-            res = "A";
-        else if ( data >0.2 && data <= 0.4 )
-            res = "B";
-        else if ( data >0.4 && data <= 0.6 )
-            res = "C";
-        else if ( data >0.6 && data <= 0.8 )
-            res = "D";
-        else if ( data >0.8 && data <= 1 )
-            res = "E";
-        else
-            res = "C";
-        return res;
+        DecimalFormat df = new DecimalFormat("0.00");
+        return df.format( data * 100 );
     }
 
 

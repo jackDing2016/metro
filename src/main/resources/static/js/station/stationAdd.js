@@ -348,6 +348,8 @@ var getData = function () {
         plateform[ value.name ] = value.value;
     } );
 
+    plateform.stationNameCode = $( '#stationNameCodeVal' ).val();
+
     // 线路
     var lineCode = $( '#myTabs' ).find( 'a.active' ).find( 'input' ).val();
     plateform.lineCode = lineCode;

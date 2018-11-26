@@ -11,6 +11,7 @@ import hello.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -37,7 +38,9 @@ public class StationController {
 
 
     @GetMapping("/toAddDetailPage")
-    public  String greeting() {
+    public  String toAddDetailPage(Model model, String stationName, String stationNameCode) {
+        model.addAttribute( "stationName", stationName );
+        model.addAttribute( "stationNameCode", stationNameCode );
         return "part-detail-2";
     }
 
@@ -63,6 +66,9 @@ public class StationController {
 
         Plateform plateform =  stationAddParam.getPlateform();
         String lineCode = plateform.getLineCode() + "";
+        // 比如jiangsulu
+        String stationNameCode = plateform.getStationNameCode();
+
         String stationName = "jiangsuRoad";
 
         Map<String, Object> lineDataMap =
@@ -70,11 +76,21 @@ public class StationController {
 
         // 站台压力  start
         // plateformArea:2083
+//        pressureCalculateService.calPlateform( lineCode, plateform.getEffectiveArea(),
+//                Arrays.asList( ( Integer[] ) lineDataMap.get( MetroConstant.KEY_IMPORTNUMBERARR + stationName ) ),
+//                Arrays.asList( ( Integer[] ) lineDataMap.get( MetroConstant.KEY_TRANSFERINTONUMBERARR + stationName ) ),
+//                Arrays.asList( ( Integer[] ) lineDataMap.get( MetroConstant.KEY_EXPORTNUMBERARR + stationName ) ),
+//                Arrays.asList( ( Integer[] ) lineDataMap.get( MetroConstant.KEY_TRANSFEROUTNUMBERARR + stationName ) ));
+
         pressureCalculateService.calPlateform( lineCode, plateform.getEffectiveArea(),
                 Arrays.asList( ( Integer[] ) lineDataMap.get( MetroConstant.KEY_IMPORTNUMBERARR + stationName ) ),
                 Arrays.asList( ( Integer[] ) lineDataMap.get( MetroConstant.KEY_TRANSFERINTONUMBERARR + stationName ) ),
                 Arrays.asList( ( Integer[] ) lineDataMap.get( MetroConstant.KEY_EXPORTNUMBERARR + stationName ) ),
                 Arrays.asList( ( Integer[] ) lineDataMap.get( MetroConstant.KEY_TRANSFEROUTNUMBERARR + stationName ) ));
+
+
+
+
 
         // 站台压力  end
 
@@ -103,7 +119,7 @@ public class StationController {
 
         List<Integer> fiveMinuteTrafficDataList =
             trafficDataService.getDataList(TrafficTypeEnum.IMPORT, TimeIntervalTypeEnum.FIVE_MINUTE,
-                    3, 26, lineCode);
+                    3, 26, lineCode, stationNameCode);
 
         if ( gate != null ) {
             // 进站安检

@@ -24,9 +24,10 @@ public interface TrafficDataService extends IService<TrafficData> {
      * @param startOrder
      * @param endOrder
      * @param lineCode
+     * @param stationName
      * @return
      */
     List<Integer> getDataList(TrafficTypeEnum trafficTypeEnum, TimeIntervalTypeEnum timeIntervalTypeEnum,
-                              Integer startOrder, Integer endOrder, String lineCode);
+                              Integer startOrder, Integer endOrder, String lineCode, String stationName);
 
 }
