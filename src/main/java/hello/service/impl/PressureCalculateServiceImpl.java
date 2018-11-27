@@ -1,5 +1,6 @@
 package hello.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import hello.constant.MetroConstant;
 import hello.constant.PressureTypeEnum;
 import hello.constant.TimeIntervalTypeEnum;
@@ -7,6 +8,7 @@ import hello.constant.TrafficTypeEnum;
 import hello.entity.*;
 import hello.param.StationAddParam;
 import hello.service.PressureCalculateService;
+import hello.service.PressureLevelResultService;
 import hello.service.TrafficDataService;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +37,9 @@ public class PressureCalculateServiceImpl implements PressureCalculateService {
     @Autowired
     private TrafficDataService trafficDataService;
 
+    @Autowired
+    private PressureLevelResultService pressureLevelResultService;
+
 
     @Override
     public Map<String, Object> getEntranceResultMap() {
@@ -44,12 +49,14 @@ public class PressureCalculateServiceImpl implements PressureCalculateService {
     @Override
     public void calPlateform(String lineCode, Double plateformArea,
                              List<Integer> importNumber, List<Integer> transferIntoNumber,
-                             List<Integer> exportNumber, List<Integer> transferOutNumber) {
+                             List<Integer> exportNumber, List<Integer> transferOutNumber,
+                             String stationNameCode) {
 
         List<String> resultList = new ArrayList<>();
         // 用于计算加权平均值
         List<Double> resultValList = new ArrayList<>();
 
+        List<PressureLevelResult> pressureLevelResultList = new ArrayList<>();
 
         for ( int i = 0; i < 8; i++ ) {
 
@@ -59,6 +66,16 @@ public class PressureCalculateServiceImpl implements PressureCalculateService {
 
             double pMax = pPlateform * 1.3;
 
+            PressureLevelResult pressureLevelResult = new PressureLevelResult();
+            pressureLevelResult.setDataOrder( i );
+            pressureLevelResult.setLineCode( lineCode );
+            pressureLevelResult.setStationName( stationNameCode );
+            pressureLevelResult.setPressureType( PressureTypeEnum.PLATEFORM.getCode() );
+            pressureLevelResult.setResultValue( pMax );
+            pressureLevelResult.setResultLevel( calPlateformLevel( pMax ) );
+
+            pressureLevelResultList.add( pressureLevelResult );
+
             resultList.add( calPlateformLevel( pMax ) );
             resultValList.add( pMax );
 
@@ -66,9 +83,19 @@ public class PressureCalculateServiceImpl implements PressureCalculateService {
 
 
         plateformMap.put( "line" + lineCode, resultList );
-
         // 用于计算加权平均值
         plateformMap.put(  "line" + lineCode + "Val", resultValList );
+
+        // 删除原来的 暂时从简
+        PressureLevelResult pressureLevelResultQuery =
+                new PressureLevelResult();
+        pressureLevelResultQuery.setLineCode( lineCode );
+        pressureLevelResultQuery.setStationName( stationNameCode );
+        QueryWrapper<PressureLevelResult> queryWrapper =
+                new QueryWrapper<>(pressureLevelResultQuery);
+        pressureLevelResultService.remove( queryWrapper );
+
+        pressureLevelResultService.saveBatch( pressureLevelResultList );
 
     }
 

@@ -4,6 +4,8 @@ import hello.constant.MetroConstant;
 import hello.constant.PressureTypeEnum;
 import hello.param.PressureCalculateParam;
 import hello.service.PressureCalculateService;
+import hello.service.PressureLevelResultService;
+import hello.service.PressureLevelStatisticsService;
 import org.python.antlr.ast.Str;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpRequest;
@@ -26,6 +28,9 @@ public class PressureCalculationController {
 
     @Autowired
     private PressureCalculateService pressureCalculateService;
+
+    @Autowired
+    private PressureLevelStatisticsService pressureLevelStatisticsService;
 
 //    @PostMapping(value = "/toPressureTypeSelectPage",
 //            consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
@@ -115,28 +120,9 @@ public class PressureCalculationController {
 
         if ( !StringUtils.isEmpty( per2Val )) {
             // 计算加权平均值
-            String lineCode2 = "2";
-            String lineCode11 = "11";
+            pressureLevelStatisticsService.calculateAvgLevelAndScore( l )
 
-            Map<String, Object> plateformResultMap =
-                    pressureCalculateService.getPlateformResultMap();
-            List<Double> doubleList = (List<Double>) plateformResultMap.get(  "line" + lineCode2 + "Val" );
-            List<Double> doubleList2 = (List<Double>) plateformResultMap.get( "line" + lineCode11 + "Val" );
 
-            Double sum = 0.0;
-            for ( Double douVal : doubleList) {
-                sum += douVal;
-            }
-
-            Double sum2 = 0.0;
-            for ( Double douVal : doubleList2) {
-                sum2 += douVal;
-            }
-
-            Double avgVal=
-                    ( sum * Double.valueOf( per2Val ) + sum2 * Double.valueOf( per11Val  )) / ( doubleList.size() );
-            String avgLevel = pressureCalculateService.calPlateformLevel( avgVal );
-            String avgScore = pressureCalculateService.calPlateformScore( avgVal );
 
             model.addAttribute( "avgLevel", avgLevel );
             model.addAttribute( "avgScore", avgScore );

@@ -14,7 +14,8 @@ public interface PressureCalculateService {
 
     void calPlateform(String lineCode, Double plateformArea,
                       List<Integer> importNumber, List<Integer> transferIntoNumber,
-                      List<Integer> exportNumber, List<Integer> transferOutNumber );
+                      List<Integer> exportNumber, List<Integer> transferOutNumber,
+                      String stationNameCode);
 
     /**
      * 计算压力等级的平均值

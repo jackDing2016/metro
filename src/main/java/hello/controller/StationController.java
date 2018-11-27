@@ -92,9 +92,9 @@ public class StationController {
                 transferDataService.getDataList( lineCode, stationNameCode, TransferTypeEnum.TRANSFER_IN),
                 trafficDataService.getDataList( TrafficTypeEnum.EXPORT, TimeIntervalTypeEnum.FIFTEEN_MINUTE,
                         3, 26, lineCode, stationNameCode),
-                transferDataService.getDataList( lineCode, stationNameCode, TransferTypeEnum.TRANSFER_OUT)
+                transferDataService.getDataList( lineCode, stationNameCode, TransferTypeEnum.TRANSFER_OUT),
+                stationNameCode
                 );
-
 
 
         // 站台压力  end
@@ -106,10 +106,17 @@ public class StationController {
 
         if ( escalator != null ) {
 
+//            pressureCalculateService.calEscalator(lineCode, escalator.getPlateEscalatorNum(),
+//                    Arrays.asList( ( Integer[] ) lineDataMap.get( MetroConstant.KEY_EXPORTNUMBERARR + stationName ) ),
+//                    Arrays.asList( ( Integer[] ) lineDataMap.get( MetroConstant.KEY_TRANSFEROUTNUMBERARR + stationName ) ),
+//                    0.5, escalator.getPlateEffLength(), escalator.getUpEscalatorWidth(), escalator.getFloorWidth());
+
             pressureCalculateService.calEscalator(lineCode, escalator.getPlateEscalatorNum(),
-                    Arrays.asList( ( Integer[] ) lineDataMap.get( MetroConstant.KEY_EXPORTNUMBERARR + stationName ) ),
-                    Arrays.asList( ( Integer[] ) lineDataMap.get( MetroConstant.KEY_TRANSFEROUTNUMBERARR + stationName ) ),
+                    trafficDataService.getDataList( TrafficTypeEnum.EXPORT,  TimeIntervalTypeEnum.FIFTEEN_MINUTE,
+                            null, null, lineCode, stationNameCode ),
+                    transferDataService.getDataList( lineCode, stationNameCode, TransferTypeEnum.TRANSFER_OUT ) ,
                     0.5, escalator.getPlateEffLength(), escalator.getUpEscalatorWidth(), escalator.getFloorWidth());
+
 
         }
 
@@ -137,8 +144,6 @@ public class StationController {
                     pressureCalculateService.calGateImportExport( lineCode,
                             fiveMinuteTrafficDataList,
                             gate.getSecNum(), gate.getAvgSecTime());
-
-
 
             // 出闸机
             List<Double> gateExportResList =
