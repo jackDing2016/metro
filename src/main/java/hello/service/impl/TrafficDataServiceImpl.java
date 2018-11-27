@@ -36,8 +36,8 @@ public class TrafficDataServiceImpl extends ServiceImpl<TrafficDataMapper, Traff
         trafficDataQuery.setStationName( stationName );
         QueryWrapper<TrafficData> wrapper = new QueryWrapper<>( trafficDataQuery );
 
-        wrapper.between( "data_order", startOrder, endOrder );
-        wrapper.orderByAsc( "data_order" );
+        // 排序字段不作为查询条件
+        wrapper.orderByAsc( false, "data_order" );
 
         List< TrafficData > trafficDataList = list( wrapper );
         List<Integer> fiveMinuteTrafficDataList = new ArrayList<>();

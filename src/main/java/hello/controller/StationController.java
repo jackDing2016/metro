@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import hello.constant.MetroConstant;
 import hello.constant.TimeIntervalTypeEnum;
 import hello.constant.TrafficTypeEnum;
+import hello.constant.TransferTypeEnum;
 import hello.entity.*;
 import hello.param.StationAddParam;
 import hello.service.*;
@@ -32,6 +33,9 @@ public class StationController {
 
     @Autowired
     private TrafficDataService trafficDataService;
+
+    @Autowired
+    private TransferDataService transferDataService;
 
     @Autowired
     private GateService gateService;
@@ -83,12 +87,13 @@ public class StationController {
 //                Arrays.asList( ( Integer[] ) lineDataMap.get( MetroConstant.KEY_TRANSFEROUTNUMBERARR + stationName ) ));
 
         pressureCalculateService.calPlateform( lineCode, plateform.getEffectiveArea(),
-                Arrays.asList( ( Integer[] ) lineDataMap.get( MetroConstant.KEY_IMPORTNUMBERARR + stationName ) ),
-                Arrays.asList( ( Integer[] ) lineDataMap.get( MetroConstant.KEY_TRANSFERINTONUMBERARR + stationName ) ),
-                Arrays.asList( ( Integer[] ) lineDataMap.get( MetroConstant.KEY_EXPORTNUMBERARR + stationName ) ),
-                Arrays.asList( ( Integer[] ) lineDataMap.get( MetroConstant.KEY_TRANSFEROUTNUMBERARR + stationName ) ));
-
-
+                trafficDataService.getDataList( TrafficTypeEnum.IMPORT, TimeIntervalTypeEnum.FIFTEEN_MINUTE,
+                        3, 26, lineCode, stationNameCode),
+                transferDataService.getDataList( lineCode, stationNameCode, TransferTypeEnum.TRANSFER_IN),
+                trafficDataService.getDataList( TrafficTypeEnum.EXPORT, TimeIntervalTypeEnum.FIFTEEN_MINUTE,
+                        3, 26, lineCode, stationNameCode),
+                transferDataService.getDataList( lineCode, stationNameCode, TransferTypeEnum.TRANSFER_OUT)
+                );
 
 
 

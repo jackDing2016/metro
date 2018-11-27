@@ -134,7 +134,7 @@ public class PressureCalculationController {
             }
 
             Double avgVal=
-                    ( sum * Double.valueOf( per2Val ) + sum2 * Double.valueOf( per11Val  )) / ( doubleList.size() + doubleList2.size() );
+                    ( sum * Double.valueOf( per2Val ) + sum2 * Double.valueOf( per11Val  )) / ( doubleList.size() );
             String avgLevel = pressureCalculateService.calPlateformLevel( avgVal );
             String avgScore = pressureCalculateService.calPlateformScore( avgVal );
 
