@@ -19,26 +19,35 @@ $(document).ready(function () {
     //     $( this ).val( per11Val );
     // } );
 
+    ;
+    // param
+    var param = '';
 
     // 权重
     var percent = '?per2Val=' + per2Val + '&&per11Val=' + per11Val;
 
+    // lineCodeStr
+    var lineCodeStr = '&&lineCodeStr=' + $( '#lineCodeStr' ).val();
 
+    // stationNameCode
+    var stationNameCode = '&&stationNameCode=' + $( '#stationNameCode' ).val();
+
+    param = percent + lineCodeStr + stationNameCode;
 
     $( '#plateformResBtn' ).click( function () {
-        window.location.href = '/pressureCalculation/toPressureCalculationResultPage/1' + percent;
+        window.location.href = '/pressureCalculation/toPressureCalculationResultPage/1' + param;
     } );
 
     $( '#escalatorResBtn' ).click( function () {
-        window.location.href = '/pressureCalculation/toPressureCalculationResultPage/2' + percent;
+        window.location.href = '/pressureCalculation/toPressureCalculationResultPage/2' + param;
     } );
 
     $( '#gateResBtn' ).click( function () {
-        window.location.href = '/pressureCalculation/toPressureCalculationResultPage/3?' + percent;
+        window.location.href = '/pressureCalculation/toPressureCalculationResultPage/3?' + param;
     } );
 
     $( '#entranceResBtn' ).click( function () {
-        window.location.href = '/pressureCalculation/toPressureCalculationResultPage/4?' + percent;
+        window.location.href = '/pressureCalculation/toPressureCalculationResultPage/4?' + param;
     } );
 
     $( '#transferPassageResBtn' ).click( function () {
@@ -46,7 +55,7 @@ $(document).ready(function () {
     } );
 
     $( '#resultNewBtn' ).click( function () {
-        window.location.href = '/pressureCalculation/toPressureAllTypeStatisticsPage' + percent;
+        window.location.href = '/pressureCalculation/toPressureAllTypeStatisticsPage' + param;
     } );
 
     $( '#resultImgsampleBtn' ).click( function () {

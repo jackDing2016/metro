@@ -42,9 +42,14 @@ public class PressureCalculationController {
 //    }
 
     @GetMapping(value = "/toPressureTypeSelectPage")
-    public String toPressureTypeSelectPage() {
-//        System.out.println( formData );
-//        model.addAttribute( "dataStrArr", formData.get( "pressureCalculateParam" ) );
+    public String toPressureTypeSelectPage(
+            @RequestParam( required = true) String lineCodeStr,
+            @RequestParam( required = true) String stationNameCode,
+            Model model) {
+
+        model.addAttribute( "lineCodeStr", lineCodeStr );
+        model.addAttribute( "stationNameCode", stationNameCode );
+
         return "choose-part";
     }
 
@@ -100,36 +105,63 @@ public class PressureCalculationController {
 
     @GetMapping( "/toPressureCalculationResultPage/{pressureType}" )
     public String toPressureResultPage(@PathVariable(name = "pressureType") Integer pressureType, Model model,
-                                       @RequestParam(required = false) String per2Val, @RequestParam(required = false) String per11Val) {
+                                       @RequestParam( required = false ) String per2Val,
+                                       @RequestParam( required = false ) String per11Val,
+                                       @RequestParam( required = true) String lineCodeStr,
+                                       @RequestParam( required = true) String stationNameCode) {
 
         String viewName = null;
 
-        if ( PressureTypeEnum.PLATEFORM.getCode() == pressureType )
+        PressureTypeEnum pressureTypeEnum = null;
+
+
+        if ( PressureTypeEnum.PLATEFORM.getCode() == pressureType ) {
             viewName = "result-part-zt";
-        else if ( PressureTypeEnum.ENTRANCE.getCode() == pressureType )
+            pressureTypeEnum = PressureTypeEnum.PLATEFORM;
+        }
+        else if ( PressureTypeEnum.ENTRANCE.getCode() == pressureType ) {
             viewName = "result-part-crk";
-        else if ( PressureTypeEnum.Escalator.getCode() == pressureType )
+            pressureTypeEnum = PressureTypeEnum.ENTRANCE;
+        }
+        else if ( PressureTypeEnum.Escalator.getCode() == pressureType ) {
             viewName = "result-part-lft";
-        else if ( PressureTypeEnum.GATE.getCode() == pressureType )
+            pressureTypeEnum = PressureTypeEnum.Escalator;
+        }
+        else if ( PressureTypeEnum.GATE.getCode() == pressureType ) {
             viewName = "result-part-zj";
-        else if ( PressureTypeEnum.TRANSFER_PASSAGE.getCode() == pressureType )
+            pressureTypeEnum = PressureTypeEnum.GATE;
+        }
+
+        else if ( PressureTypeEnum.TRANSFER_PASSAGE.getCode() == pressureType ) {
             viewName = "result-part-hctd";
+            pressureTypeEnum = PressureTypeEnum.TRANSFER_PASSAGE;
+        }
 
         model.addAttribute( "per2Val", per2Val );
         model.addAttribute( "per11Val", per11Val );
 
         if ( !StringUtils.isEmpty( per2Val )) {
-            // 计算加权平均值
-            pressureLevelStatisticsService.calculateAvgLevelAndScore( l )
 
+            if ( !StringUtils.isEmpty( lineCodeStr ) ) {
 
+                String[] lineCodeArr = lineCodeStr.split( "," );
 
-            model.addAttribute( "avgLevel", avgLevel );
-            model.addAttribute( "avgScore", avgScore );
+                if ( lineCodeArr.length == 2 ) {
+
+                    // 计算加权平均值
+                    Map<String, String> resultMap =
+                        pressureLevelStatisticsService.calculateAvgLevelAndScore( lineCodeArr[0], lineCodeArr[1],
+                                Double.valueOf( per2Val ), Double.valueOf( per11Val ),
+                                stationNameCode, pressureTypeEnum);
+
+                    model.addAttribute( "avgLevel", resultMap.get( "avgLevel") );
+                    model.addAttribute( "avgScore", resultMap.get( "avgScore") );
+
+                }
+
+            }
 
         }
-
-
 
         return viewName;
 

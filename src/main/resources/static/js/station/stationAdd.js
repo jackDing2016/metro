@@ -324,6 +324,14 @@ var saveData =  function ( submitData ) {
 
 var calculateData =  function ( submitData ) {
 
+    var lineCodeStr = '';
+
+    $.each( $( '#myTabs' ).find( 'a' ), function () {
+        lineCodeStr = lineCodeStr + ',' + $( this ).find( 'input' ).val();
+    } );
+
+    lineCodeStr = lineCodeStr.substring(1, lineCodeStr.length);
+
     $.ajax({
         type: 'post',
         url: '/station/calculateData',
@@ -332,7 +340,8 @@ var calculateData =  function ( submitData ) {
         dataType : 'text',
         success: function (data) {
             console.log( 111 );
-            window.location.href = '/pressureCalculation/toPressureTypeSelectPage';
+            window.location.href = '/pressureCalculation/toPressureTypeSelectPage?lineCodeStr='
+                + lineCodeStr + '&&stationNameCode=' + $( '#stationNameCodeVal' ).val();
         }
     });
 }
@@ -341,6 +350,8 @@ var getData = function () {
 
     var stationAddParam = {};
 
+    var stationNameCode = $( '#stationNameCodeVal' ).val();
+
     // 站台基本信息
     var plateform = {};
 
@@ -348,7 +359,7 @@ var getData = function () {
         plateform[ value.name ] = value.value;
     } );
 
-    plateform.stationNameCode = $( '#stationNameCodeVal' ).val();
+    plateform.stationNameCode = stationNameCode;
 
     // 线路
     var lineCode = $( '#myTabs' ).find( 'a.active' ).find( 'input' ).val();
