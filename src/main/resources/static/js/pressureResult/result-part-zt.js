@@ -5,6 +5,13 @@ $(document).ready(function () {
         url: '/pressureCalculation/calculateResult/1',
         // data: JSON.stringify( submitData ),
         // data : $()
+        dataType : 'json',
+        data: JSON.stringify(
+            {
+                lineCodeStr : $( '#lineCodeStr' ).val(),
+                stationNameCode : $( '#stationNameCode' ).val()
+            }
+        ),
         contentType: "application/json; charset=utf-8",
         success: function (data) {
 

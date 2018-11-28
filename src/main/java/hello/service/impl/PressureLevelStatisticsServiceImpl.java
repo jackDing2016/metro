@@ -46,8 +46,19 @@ public class PressureLevelStatisticsServiceImpl implements PressureLevelStatisti
 
         Double avgVal=
                 ( sum * Double.valueOf( weightOne ) + sum2 * Double.valueOf( weightTwo  )) / ( dataList1.size() );
-        String avgLevel = pressureCalculateService.calPlateformLevel( avgVal );
-        String avgScore = pressureCalculateService.calPlateformScore( avgVal );
+
+        String avgLevel = null;
+        String avgScore = null;
+        if ( pressureTypeEnum == PressureTypeEnum.PLATEFORM ) {
+            avgLevel = pressureCalculateService.calPlateformLevel( avgVal );
+            avgScore = pressureCalculateService.calPlateformScore( avgVal );
+        }
+        else if ( pressureTypeEnum == PressureTypeEnum.Escalator ) {
+            avgLevel = pressureCalculateService.calEscalatorLevel( avgVal );
+            avgScore = pressureCalculateService.calEscalatorScore( avgVal );
+        }
+
+
 
         Map<String, String> resultMap = new HashMap<>();
 

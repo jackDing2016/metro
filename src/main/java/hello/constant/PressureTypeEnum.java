@@ -36,4 +36,11 @@ public enum PressureTypeEnum {
     public void setName(String name) {
         this.name = name;
     }
+
+    public static PressureTypeEnum getByCode( Integer code ) {
+        for( PressureTypeEnum e : values()) {
+            if( e.code.equals( code ) ) return e;
+        }
+        return null;
+    }
 }

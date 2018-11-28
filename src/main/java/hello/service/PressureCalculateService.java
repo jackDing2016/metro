@@ -46,7 +46,8 @@ public interface PressureCalculateService {
     void calEscalator( String lineCode, Integer plateEscalatorNum,
                        List<Integer> exportNumber, List<Integer> transferOutNumber,
                        Double walkSpeed, Double plateformLength,
-                       Double upEscalatorWidth, Double floorWidth);
+                       Double upEscalatorWidth, Double floorWidth,
+                       String stationNameCode);
 
     /**
      * 计算进闸
@@ -139,5 +140,9 @@ public interface PressureCalculateService {
     String calGateLevel( Double data );
 
     Double calGateScore( Double data );
+
+    String calEscalatorScore( Double data );
+
+    String calEscalatorLevel( Double data );
 
 }

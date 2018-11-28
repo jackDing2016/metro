@@ -106,17 +106,12 @@ public class StationController {
 
         if ( escalator != null ) {
 
-//            pressureCalculateService.calEscalator(lineCode, escalator.getPlateEscalatorNum(),
-//                    Arrays.asList( ( Integer[] ) lineDataMap.get( MetroConstant.KEY_EXPORTNUMBERARR + stationName ) ),
-//                    Arrays.asList( ( Integer[] ) lineDataMap.get( MetroConstant.KEY_TRANSFEROUTNUMBERARR + stationName ) ),
-//                    0.5, escalator.getPlateEffLength(), escalator.getUpEscalatorWidth(), escalator.getFloorWidth());
-
             pressureCalculateService.calEscalator(lineCode, escalator.getPlateEscalatorNum(),
                     trafficDataService.getDataList( TrafficTypeEnum.EXPORT,  TimeIntervalTypeEnum.FIFTEEN_MINUTE,
                             null, null, lineCode, stationNameCode ),
                     transferDataService.getDataList( lineCode, stationNameCode, TransferTypeEnum.TRANSFER_OUT ) ,
-                    0.5, escalator.getPlateEffLength(), escalator.getUpEscalatorWidth(), escalator.getFloorWidth());
-
+                    0.5, escalator.getPlateEffLength(), escalator.getUpEscalatorWidth(), escalator.getFloorWidth(),
+                    stationNameCode);
 
         }
 

@@ -32,6 +32,9 @@ public class PressureCalculationController {
     @Autowired
     private PressureLevelStatisticsService pressureLevelStatisticsService;
 
+    @Autowired
+    private PressureLevelResultService pressureLevelResultService;
+
 //    @PostMapping(value = "/toPressureTypeSelectPage",
 //            consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
 //    public String toPressureTypeSelectPage(
@@ -140,6 +143,9 @@ public class PressureCalculationController {
         model.addAttribute( "per2Val", per2Val );
         model.addAttribute( "per11Val", per11Val );
 
+        model.addAttribute( "lineCodeStr", lineCodeStr );
+        model.addAttribute( "stationNameCode", stationNameCode );
+
         if ( !StringUtils.isEmpty( per2Val )) {
 
             if ( !StringUtils.isEmpty( lineCodeStr ) ) {
@@ -167,23 +173,22 @@ public class PressureCalculationController {
 
     }
 
-    @PostMapping(  value = "/calculateResult/{pressureType}" )
+    @PostMapping(  value = "/calculateResult/{pressureType}")
     public @ResponseBody Map<String, Object> calculateResult(
-            @PathVariable( name = "pressureType") Integer pressureType
+            @PathVariable( name = "pressureType") Integer pressureType,
+            @RequestParam( required = true) String lineCodeStr,
+            @RequestParam( required = true ) String stationNameCode
             ) {
 
         Map<String, Object> resultMap = null;
 
-        if ( PressureTypeEnum.PLATEFORM.getCode() == pressureType )
-            resultMap = pressureCalculateService.getPlateformResultMap();
-        else if ( PressureTypeEnum.ENTRANCE.getCode() == pressureType )
-            resultMap =  pressureCalculateService.getEntranceResultMap();
-        else if ( PressureTypeEnum.Escalator.getCode() == pressureType)
-            resultMap = pressureCalculateService.getEscalatorResultMap();
-        else if ( PressureTypeEnum.GATE.getCode() == pressureType)
-            resultMap = pressureCalculateService.getGateResultMap();
-        else if ( PressureTypeEnum.TRANSFER_PASSAGE.getCode() == pressureType)
-            resultMap = pressureCalculateService.getTransferPassageResultMap();
+        String[] lineCodeArr = lineCodeStr.split( "," );
+
+        PressureTypeEnum pressureTypeEnum =
+                PressureTypeEnum.getByCode( pressureType );
+
+        resultMap = pressureLevelResultService.getDataListMap( lineCodeArr,
+                stationNameCode, pressureTypeEnum);
 
         return  resultMap;
 

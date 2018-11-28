@@ -32,7 +32,7 @@ $(document).ready(function () {
                     right:'5%',
                 },
                 title: {
-                    text: '出入口压力等级'
+                    text: '楼扶梯压力等级'
                 },
                 legend: {
                     data:['2号线（工作日）','11号线（工作日）','综合压力等级'],

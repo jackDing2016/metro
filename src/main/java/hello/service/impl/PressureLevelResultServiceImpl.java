@@ -1,15 +1,19 @@
 package hello.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import hello.constant.MetroConstant;
 import hello.constant.PressureTypeEnum;
 import hello.entity.PressureLevelResult;
 import hello.dao.PressureLevelResultMapper;
 import hello.service.PressureLevelResultService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import org.apache.commons.collections.map.HashedMap;
+import org.python.antlr.ast.Str;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -48,5 +52,21 @@ public class PressureLevelResultServiceImpl extends ServiceImpl<PressureLevelRes
         }
 
         return dataList;
+    }
+
+    @Override
+    public Map<String, Object> getDataListMap(String[] lineCodeArr,
+                                              String stationNameCode, PressureTypeEnum pressureTypeEnum) {
+
+        Map<String, Object> dataMap = new HashedMap();
+
+        for ( int i = 0; i < lineCodeArr.length; i++ ) {
+
+            dataMap.put(MetroConstant.PREFFIX_LINE + lineCodeArr[ i ] + MetroConstant.SUFFIX_LINE,
+                    getDataList( lineCodeArr[ i ], stationNameCode,  pressureTypeEnum));
+
+        }
+
+        return dataMap;
     }
 }

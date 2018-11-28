@@ -5,6 +5,7 @@ import hello.entity.PressureLevelResult;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -18,5 +19,8 @@ public interface PressureLevelResultService extends IService<PressureLevelResult
 
     List<Double> getDataList(String lineCode, String stationNameCode,
                              PressureTypeEnum pressureTypeEnum);
+
+    Map<String, Object> getDataListMap( String[] lineCodeArr,
+                                     String stationNameCode, PressureTypeEnum pressureTypeEnum);
 
 }

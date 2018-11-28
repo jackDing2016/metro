@@ -76,28 +76,35 @@ public class PressureCalculateServiceImpl implements PressureCalculateService {
 
             pressureLevelResultList.add( pressureLevelResult );
 
-            resultList.add( calPlateformLevel( pMax ) );
-            resultValList.add( pMax );
+//            resultList.add( calPlateformLevel( pMax ) );
+//            resultValList.add( pMax );
 
         }
 
 
-        plateformMap.put( "line" + lineCode, resultList );
+//        plateformMap.put( "line" + lineCode, resultList );
         // 用于计算加权平均值
-        plateformMap.put(  "line" + lineCode + "Val", resultValList );
+//        plateformMap.put(  "line" + lineCode + "Val", resultValList );
 
         // 删除原来的 暂时从简
+        savePressureResultData(lineCode, stationNameCode, pressureLevelResultList);
+
+    }
+
+    private void savePressureResultData(String lineCode, String stationNameCode,
+                                        List<PressureLevelResult> pressureLevelResultList) {
         PressureLevelResult pressureLevelResultQuery =
                 new PressureLevelResult();
         pressureLevelResultQuery.setLineCode( lineCode );
         pressureLevelResultQuery.setStationName( stationNameCode );
+        pressureLevelResultQuery.setPressureType( PressureTypeEnum.PLATEFORM.getCode() );
         QueryWrapper<PressureLevelResult> queryWrapper =
                 new QueryWrapper<>(pressureLevelResultQuery);
         pressureLevelResultService.remove( queryWrapper );
 
         pressureLevelResultService.saveBatch( pressureLevelResultList );
-
     }
+
 
     @Override
     public String calPlateformLevel( Double data ) {
@@ -117,7 +124,8 @@ public class PressureCalculateServiceImpl implements PressureCalculateService {
         return res;
     }
 
-    private String calEscalatorLevel( Double data ) {
+    @Override
+    public String calEscalatorLevel( Double data ) {
         String res = null;
         if ( data > 0 )
             res = "E";
@@ -238,10 +246,13 @@ public class PressureCalculateServiceImpl implements PressureCalculateService {
     public void calEscalator(String lineCode, Integer plateEscalatorNum,
                              List<Integer> exportNumber, List<Integer> transferOutNumber,
                              Double walkSpeed, Double plateformLength,
-                             Double upEscalatorWidth, Double floorWidth) {
+                             Double upEscalatorWidth, Double floorWidth,
+                             String stationNameCode) {
 
 
-        List<String> resultList = new ArrayList<>();
+//        List<String> resultList = new ArrayList<>();
+
+        List<PressureLevelResult> pressureLevelResultList = new ArrayList<>();
 
         for ( int i = 0; i < 8; i++ ) {
 
@@ -278,11 +289,25 @@ public class PressureCalculateServiceImpl implements PressureCalculateService {
 
             System.out.println( "排队乘客总的延误时间D " +  result );
 
-            resultList.add( calEscalatorLevel( result ) );
+//            resultList.add( calEscalatorLevel( result ) );
+
+            PressureLevelResult pressureLevelResult = new PressureLevelResult();
+            pressureLevelResult.setDataOrder( i );
+            pressureLevelResult.setLineCode( lineCode );
+            pressureLevelResult.setStationName( stationNameCode );
+            pressureLevelResult.setPressureType( PressureTypeEnum.Escalator.getCode() );
+            pressureLevelResult.setResultValue( result );
+            pressureLevelResult.setResultLevel( calEscalatorLevel( result ) );
+
+            pressureLevelResultList.add( pressureLevelResult );
+
 
         }
 
-        escalatorMap.put( "line" + lineCode, resultList );
+//        escalatorMap.put( "line" + lineCode, resultList );
+
+        // 删除原来的 暂时从简
+        savePressureResultData(lineCode, stationNameCode, pressureLevelResultList);
 
     }
 
@@ -542,5 +567,9 @@ public class PressureCalculateServiceImpl implements PressureCalculateService {
         return data * 100;
     }
 
-
+    @Override
+    public String calEscalatorScore(Double data) {
+        DecimalFormat df = new DecimalFormat("0.00");
+        return df.format( data / 30 );
+    }
 }
