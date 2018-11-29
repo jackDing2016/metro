@@ -173,7 +173,7 @@ public class PressureCalculationController {
 
     }
 
-    @PostMapping(  value = "/calculateResult/{pressureType}")
+    @GetMapping(  value = "/calculateResult/{pressureType}")
     public @ResponseBody Map<String, Object> calculateResult(
             @PathVariable( name = "pressureType") Integer pressureType,
             @RequestParam( required = true) String lineCodeStr,
@@ -187,8 +187,9 @@ public class PressureCalculationController {
         PressureTypeEnum pressureTypeEnum =
                 PressureTypeEnum.getByCode( pressureType );
 
-        resultMap = pressureLevelResultService.getDataListMap( lineCodeArr,
+        resultMap = pressureLevelResultService.getDataLevelListMap( lineCodeArr,
                 stationNameCode, pressureTypeEnum);
+
 
         return  resultMap;
 

@@ -95,7 +95,7 @@ public interface PressureCalculateService {
      * @param weightExit
      */
     void calGate( String lineCode, List<Double> gateImportResultList, List<Double> gateExportResultList,
-                  Double weitghEntrance, Double weightExit);
+                  Double weitghEntrance, Double weightExit, String stationNameCode);
 
 
     /**
@@ -139,7 +139,7 @@ public interface PressureCalculateService {
 
     String calGateLevel( Double data );
 
-    Double calGateScore( Double data );
+    String calGateScore( Double data );
 
     String calEscalatorScore( Double data );
 

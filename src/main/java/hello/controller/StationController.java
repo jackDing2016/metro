@@ -124,9 +124,7 @@ public class StationController {
         Gate gate = stationAddParam.getGate();
 
 
-        List<Integer> fiveMinuteTrafficDataList =
-            trafficDataService.getDataList(TrafficTypeEnum.IMPORT, TimeIntervalTypeEnum.FIVE_MINUTE,
-                    3, 26, lineCode, stationNameCode);
+
 
         if ( gate != null ) {
             // 进站安检
@@ -135,20 +133,29 @@ public class StationController {
 //                            Arrays.asList( ( Integer[] ) lineDataMap.get( MetroConstant.KEY_5MINIMPORTNUMBERARR + stationName ) ),
 //                            gate.getSecNum(), gate.getAvgSecTime());
 
+;
             List<Double> gateImportResList =
                     pressureCalculateService.calGateImportExport( lineCode,
-                            fiveMinuteTrafficDataList,
+                            trafficDataService.getDataList(TrafficTypeEnum.IMPORT, TimeIntervalTypeEnum.FIVE_MINUTE,
+                                    3, 26, lineCode, stationNameCode),
                             gate.getSecNum(), gate.getAvgSecTime());
 
             // 出闸机
+//            List<Double> gateExportResList =
+//                    pressureCalculateService.calGateImportExport( lineCode,
+//                            Arrays.asList( ( Integer[] ) lineDataMap.get( MetroConstant.KEY_5MINEXPORTNUMBERARR + stationName ) ),
+//                            gate.getExitGateNum(), gate.getAvgPassExitGateTime());
+
             List<Double> gateExportResList =
                     pressureCalculateService.calGateImportExport( lineCode,
-                            Arrays.asList( ( Integer[] ) lineDataMap.get( MetroConstant.KEY_5MINEXPORTNUMBERARR + stationName ) ),
+                            trafficDataService.getDataList(TrafficTypeEnum.EXPORT, TimeIntervalTypeEnum.FIVE_MINUTE,
+                                    null, null, lineCode, stationNameCode),
                             gate.getExitGateNum(), gate.getAvgPassExitGateTime());
+
 
             pressureCalculateService.calGate( lineCode,
                     gateImportResList, gateExportResList,
-                    gate.getWeitghEntrance(), gate.getWeightExit());
+                    gate.getWeitghEntrance(), gate.getWeightExit(), stationNameCode );
         }
 
         // 换乘通道压力

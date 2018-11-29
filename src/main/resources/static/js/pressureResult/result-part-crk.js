@@ -1,10 +1,13 @@
 $(document).ready(function () {
 
     $.ajax({
-        type: 'post',
+        type: 'get',
         url: '/pressureCalculation/calculateResult/4',
-        // data: JSON.stringify( submitData ),
-        // data : $()
+        dataType : 'json',
+        data: {
+            lineCodeStr : $( '#lineCodeStr' ).val(),
+            stationNameCode : $( '#stationNameCode' ).val()
+        },
         contentType: "application/json; charset=utf-8",
         success: function (data) {
 

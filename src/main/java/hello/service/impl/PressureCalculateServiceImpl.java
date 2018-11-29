@@ -66,18 +66,11 @@ public class PressureCalculateServiceImpl implements PressureCalculateService {
 
             double pMax = pPlateform * 1.3;
 
-            PressureLevelResult pressureLevelResult = new PressureLevelResult();
-            pressureLevelResult.setDataOrder( i );
-            pressureLevelResult.setLineCode( lineCode );
-            pressureLevelResult.setStationName( stationNameCode );
-            pressureLevelResult.setPressureType( PressureTypeEnum.PLATEFORM.getCode() );
-            pressureLevelResult.setResultValue( pMax );
-            pressureLevelResult.setResultLevel( calPlateformLevel( pMax ) );
+            PressureLevelResult pressureLevelResult =
+                    getPressureLevelResult(lineCode, stationNameCode, i, pMax,
+                            calPlateformLevel( pMax ), PressureTypeEnum.PLATEFORM);
 
             pressureLevelResultList.add( pressureLevelResult );
-
-//            resultList.add( calPlateformLevel( pMax ) );
-//            resultValList.add( pMax );
 
         }
 
@@ -87,17 +80,29 @@ public class PressureCalculateServiceImpl implements PressureCalculateService {
 //        plateformMap.put(  "line" + lineCode + "Val", resultValList );
 
         // 删除原来的 暂时从简
-        savePressureResultData(lineCode, stationNameCode, pressureLevelResultList);
+        savePressureResultData(lineCode, stationNameCode, pressureLevelResultList, PressureTypeEnum.PLATEFORM);
 
     }
 
+    private PressureLevelResult getPressureLevelResult(String lineCode, String stationNameCode,
+                                                       int i, double pMax, String resultLevel, PressureTypeEnum pressureTypeEnum) {
+        PressureLevelResult pressureLevelResult = new PressureLevelResult();
+        pressureLevelResult.setDataOrder( i );
+        pressureLevelResult.setLineCode( lineCode );
+        pressureLevelResult.setStationName( stationNameCode );
+        pressureLevelResult.setPressureType( pressureTypeEnum.getCode() );
+        pressureLevelResult.setResultValue( pMax );
+        pressureLevelResult.setResultLevel( resultLevel );
+        return pressureLevelResult;
+    }
+
     private void savePressureResultData(String lineCode, String stationNameCode,
-                                        List<PressureLevelResult> pressureLevelResultList) {
+                                        List<PressureLevelResult> pressureLevelResultList, PressureTypeEnum pressureTypeEnum) {
         PressureLevelResult pressureLevelResultQuery =
                 new PressureLevelResult();
         pressureLevelResultQuery.setLineCode( lineCode );
         pressureLevelResultQuery.setStationName( stationNameCode );
-        pressureLevelResultQuery.setPressureType( PressureTypeEnum.PLATEFORM.getCode() );
+        pressureLevelResultQuery.setPressureType( pressureTypeEnum.getCode() );
         QueryWrapper<PressureLevelResult> queryWrapper =
                 new QueryWrapper<>(pressureLevelResultQuery);
         pressureLevelResultService.remove( queryWrapper );
@@ -289,15 +294,9 @@ public class PressureCalculateServiceImpl implements PressureCalculateService {
 
             System.out.println( "排队乘客总的延误时间D " +  result );
 
-//            resultList.add( calEscalatorLevel( result ) );
 
-            PressureLevelResult pressureLevelResult = new PressureLevelResult();
-            pressureLevelResult.setDataOrder( i );
-            pressureLevelResult.setLineCode( lineCode );
-            pressureLevelResult.setStationName( stationNameCode );
-            pressureLevelResult.setPressureType( PressureTypeEnum.Escalator.getCode() );
-            pressureLevelResult.setResultValue( result );
-            pressureLevelResult.setResultLevel( calEscalatorLevel( result ) );
+            PressureLevelResult pressureLevelResult = getPressureLevelResult(lineCode, stationNameCode,
+                    i, result, calEscalatorLevel( result ), PressureTypeEnum.Escalator);
 
             pressureLevelResultList.add( pressureLevelResult );
 
@@ -307,7 +306,7 @@ public class PressureCalculateServiceImpl implements PressureCalculateService {
 //        escalatorMap.put( "line" + lineCode, resultList );
 
         // 删除原来的 暂时从简
-        savePressureResultData(lineCode, stationNameCode, pressureLevelResultList);
+        savePressureResultData(lineCode, stationNameCode, pressureLevelResultList, PressureTypeEnum.Escalator);
 
     }
 
@@ -376,16 +375,19 @@ public class PressureCalculateServiceImpl implements PressureCalculateService {
     @Override
     public void calGate(String lineCode, List<Double> gateImportResultList,
                         List<Double> gateExportResultList,Double weitghEntrance,
-                        Double weightExit) {
+                        Double weightExit, String stationNameCode) {
 
 
-        // 存等级
-        List<String> resultList = new ArrayList<>();
-        // 存值(用于计算各条线路的加权值)
-        List<Double> resultValList = new ArrayList<>();
+//        // 存等级
+//        List<String> resultList = new ArrayList<>();
+//        // 存值(用于计算各条线路的加权值)
+//        List<Double> resultValList = new ArrayList<>();
+
+        List<PressureLevelResult> pressureLevelResultList = new ArrayList<>();
 
         int count = 0;
         Double resultMax = 0.0;
+        int dataOrder = 0;
         for ( int i = 0; i < gateImportResultList.size(); i++ ) {
 
             Double result = gateImportResultList.get(i) * weitghEntrance + gateExportResultList.get(i) * weightExit;
@@ -399,8 +401,15 @@ public class PressureCalculateServiceImpl implements PressureCalculateService {
                 }
 
                 if ( count % 3 == 2 ) {
-                    resultList.add( calPlateformLevel( resultMax ) );
-                    resultValList.add( resultMax );
+
+//                    resultList.add( calPlateformLevel( resultMax ) );
+//                    resultValList.add( resultMax );
+
+                    PressureLevelResult pressureLevelResult = getPressureLevelResult(lineCode, stationNameCode,
+                            dataOrder, resultMax, calGateLevel( resultMax ), PressureTypeEnum.GATE);
+                    dataOrder++;
+                    pressureLevelResultList.add( pressureLevelResult );
+
                 }
 
             }
@@ -412,8 +421,12 @@ public class PressureCalculateServiceImpl implements PressureCalculateService {
 
         }
 
-        gateMap.put( "line" + lineCode, resultList );
-        gateMap.put( "line" + lineCode + "Val", resultValList );
+//        gateMap.put( "line" + lineCode, resultList );
+//        gateMap.put( "line" + lineCode + "Val", resultValList );
+
+        // 删除原来的 暂时从简
+        savePressureResultData(lineCode, stationNameCode, pressureLevelResultList, PressureTypeEnum.GATE);
+
 
     }
 
@@ -563,8 +576,9 @@ public class PressureCalculateServiceImpl implements PressureCalculateService {
     }
 
     @Override
-    public Double calGateScore(Double data) {
-        return data * 100;
+    public String calGateScore(Double data) {
+        DecimalFormat df = new DecimalFormat("0.00");
+        return df.format( data * 100 );
     }
 
     @Override

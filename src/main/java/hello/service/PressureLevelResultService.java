@@ -20,7 +20,13 @@ public interface PressureLevelResultService extends IService<PressureLevelResult
     List<Double> getDataList(String lineCode, String stationNameCode,
                              PressureTypeEnum pressureTypeEnum);
 
+    List<String> getDataLevelList(String lineCode, String stationNameCode,
+                             PressureTypeEnum pressureTypeEnum);
+
     Map<String, Object> getDataListMap( String[] lineCodeArr,
                                      String stationNameCode, PressureTypeEnum pressureTypeEnum);
+
+    Map<String, Object> getDataLevelListMap( String[] lineCodeArr,
+                                        String stationNameCode, PressureTypeEnum pressureTypeEnum);
 
 }

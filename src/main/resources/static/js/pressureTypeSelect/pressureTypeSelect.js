@@ -43,15 +43,15 @@ $(document).ready(function () {
     } );
 
     $( '#gateResBtn' ).click( function () {
-        window.location.href = '/pressureCalculation/toPressureCalculationResultPage/3?' + param;
+        window.location.href = '/pressureCalculation/toPressureCalculationResultPage/3' + param;
     } );
 
     $( '#entranceResBtn' ).click( function () {
-        window.location.href = '/pressureCalculation/toPressureCalculationResultPage/4?' + param;
+        window.location.href = '/pressureCalculation/toPressureCalculationResultPage/4' + param;
     } );
 
     $( '#transferPassageResBtn' ).click( function () {
-        window.location.href = '/pressureCalculation/toPressureCalculationResultPage/5?' + percent;
+        window.location.href = '/pressureCalculation/toPressureCalculationResultPage/5' + percent;
     } );
 
     $( '#resultNewBtn' ).click( function () {

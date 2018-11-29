@@ -37,6 +37,8 @@ function chartresize(){
 </script>  
 <body style="background: #4A4A4A;">
 
+<input type="hidden" th:value="${lineCodeStr}" id="lineCodeStr" />
+<input type="hidden" th:value="${stationNameCode}" id="stationNameCode" />
 
  <div class="header">
     <div class="header-in">
@@ -141,10 +143,10 @@ function chartresize(){
             <div class="pressure_level col-12">              
                 <div class="station-pre2 pressure_result part-result">
                     <span>闸机分数</span>
-                    <p><b>85.16</b></p>
+                    <p><b th:text="${avgScore}"></b></p>
                     
                     <span>压力等级</span>
-                    <p><b>B</b></p>
+                    <p><b th:text="${avgLevel}"></b></p>
                     <a class="pre-all" data-toggle="modal" data-target="#pre-3-info">压力等级说明</a>
                 </div>
             </div>

@@ -57,7 +57,10 @@ public class PressureLevelStatisticsServiceImpl implements PressureLevelStatisti
             avgLevel = pressureCalculateService.calEscalatorLevel( avgVal );
             avgScore = pressureCalculateService.calEscalatorScore( avgVal );
         }
-
+        else if ( pressureTypeEnum == PressureTypeEnum.GATE  ) {
+            avgLevel = pressureCalculateService.calGateLevel( avgVal );
+            avgScore = pressureCalculateService.calGateScore( avgVal );
+        }
 
 
         Map<String, String> resultMap = new HashMap<>();
