@@ -290,7 +290,7 @@ public class PressureCalculateServiceImpl implements PressureCalculateService {
 
             // 排队乘客总的延误时间D
 
-            Double result = qAvg * ts;
+            Double result = qAvg * ts / 60;
 
             System.out.println( "排队乘客总的延误时间D " +  result );
 
@@ -299,7 +299,6 @@ public class PressureCalculateServiceImpl implements PressureCalculateService {
                     i, result, calEscalatorLevel( result ), PressureTypeEnum.Escalator);
 
             pressureLevelResultList.add( pressureLevelResult );
-
 
         }
 
