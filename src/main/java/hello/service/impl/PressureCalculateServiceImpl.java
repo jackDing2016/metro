@@ -484,10 +484,10 @@ public class PressureCalculateServiceImpl implements PressureCalculateService {
     }
 
     @Override
-    public void calPressureLevelAvg(String lineCodeFirst, String lineCodeSecond,
+    public Map<String, Object> calPressureLevelAvg(String lineCodeFirst, String lineCodeSecond,
                                 Double lineCodeWeightFirst, Double lineCodeSecondWeight,
                                 List<Double> lineDataFirst, List<Double> lineDataSecond,
-                                PressureTypeEnum pressureTypeEnum) {
+                                PressureTypeEnum pressureTypeEnum, String stationNameCode) {
 
         // 存等级
         List<String> resultList = new ArrayList<>();
@@ -506,7 +506,7 @@ public class PressureCalculateServiceImpl implements PressureCalculateService {
                 else if ( pressureTypeEnum.getCode() == PressureTypeEnum.Escalator.getCode() )
                     resultList.add( calEscalatorLevel( result ) );
                 else if ( pressureTypeEnum.getCode() == PressureTypeEnum.GATE.getCode() )
-                    resultList.add( calPlateformLevel( result ) );
+                    resultList.add( calGateLevel( result ) );
                 else if ( pressureTypeEnum.getCode() == PressureTypeEnum.ENTRANCE.getCode() )
                     resultList.add( calLevel( result ) );
                 else if ( pressureTypeEnum.getCode() == PressureTypeEnum.TRANSFER_PASSAGE.getCode() )
@@ -517,42 +517,15 @@ public class PressureCalculateServiceImpl implements PressureCalculateService {
 
         }
 
+        Map<String, Object> dataMap = new HashMap<>();
 
-        if ( pressureTypeEnum.getCode() == PressureTypeEnum.PLATEFORM.getCode() ) {
-            // 存等级
-            plateformMap.put( MetroConstant.PREFFIX_LINE + "_" + lineCodeFirst + "_" + lineCodeSecond, resultList);
-            // 存值
-            plateformMap.put( MetroConstant.PREFFIX_LINE + "_" + lineCodeFirst + "_" + lineCodeSecond + MetroConstant.SUFFIX_LINE,
+        // 存等级
+        dataMap.put( MetroConstant.PREFFIX_LINE + "_" + lineCodeFirst + "_" + lineCodeSecond, resultList);
+        // 存值
+        dataMap.put( MetroConstant.PREFFIX_LINE + "_" + lineCodeFirst + "_" + lineCodeSecond + MetroConstant.SUFFIX_LINE,
                     resultValList);
-        }
-        else if ( pressureTypeEnum.getCode() == PressureTypeEnum.Escalator.getCode() ) {
-            // 存等级
-            escalatorMap.put( MetroConstant.PREFFIX_LINE + "_" + lineCodeFirst + "_" + lineCodeSecond, resultList);
-            // 存值
-            escalatorMap.put( MetroConstant.PREFFIX_LINE + "_" + lineCodeFirst + "_" + lineCodeSecond + MetroConstant.SUFFIX_LINE,
-                    resultValList);
-        }
-        else if ( pressureTypeEnum.getCode() == PressureTypeEnum.GATE.getCode() ) {
-            // 存等级
-            gateMap.put( MetroConstant.PREFFIX_LINE + "_" + lineCodeFirst + "_" + lineCodeSecond, resultList);
-            // 存值
-            gateMap.put( MetroConstant.PREFFIX_LINE + "_" + lineCodeFirst + "_" + lineCodeSecond + MetroConstant.SUFFIX_LINE,
-                    resultValList);
-        }
-        else if ( pressureTypeEnum.getCode() == PressureTypeEnum.ENTRANCE.getCode() ) {
-            // 存等级
-            entranceMap.put( MetroConstant.PREFFIX_LINE + "_" + lineCodeFirst + "_" + lineCodeSecond, resultList);
-            // 存值
-            entranceMap.put( MetroConstant.PREFFIX_LINE + "_" + lineCodeFirst + "_" + lineCodeSecond + MetroConstant.SUFFIX_LINE,
-                    resultValList);
-        }
-        else if ( pressureTypeEnum.getCode() == PressureTypeEnum.TRANSFER_PASSAGE.getCode() ) {
-            // 存等级
-            transferPassageMap.put( MetroConstant.PREFFIX_LINE + "_" + lineCodeFirst + "_" + lineCodeSecond, resultList);
-            // 存值
-            transferPassageMap.put( MetroConstant.PREFFIX_LINE + "_" + lineCodeFirst + "_" + lineCodeSecond + MetroConstant.SUFFIX_LINE,
-                    resultValList);
-        }
+
+        return dataMap;
 
     }
 

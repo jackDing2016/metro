@@ -27,10 +27,10 @@ public interface PressureCalculateService {
      * @param lineDataSecond
      * @param pressureTypeEnum
      */
-    void  calPressureLevelAvg(String lineCodeFirst, String lineCodeSecond,
+    Map<String, Object>  calPressureLevelAvg(String lineCodeFirst, String lineCodeSecond,
                           Double lineCodeWeightFirst, Double lineCodeSecondWeight,
                           List<Double> lineDataFirst, List<Double> lineDataSecond,
-                          PressureTypeEnum pressureTypeEnum);
+                          PressureTypeEnum pressureTypeEnum, String stationNameCode);
 
     /**
      *

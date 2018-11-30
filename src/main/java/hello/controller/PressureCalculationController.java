@@ -58,41 +58,53 @@ public class PressureCalculationController {
 
     @GetMapping(value = "/toPressureAllTypeStatisticsPage")
     public String toPressureAllTypeStatisticsPage( Model model,@RequestParam(required = false) String per2Val,
-                                                   @RequestParam(required = false) String per11Val ) {
+                                                   @RequestParam(required = false) String per11Val,
+                                                   @RequestParam String lineCodeStr,
+                                                   @RequestParam String stationNameCode) {
 
-        pressureCalculateService.calPressureLevelAvg("2", "11",
-                Double.valueOf( per2Val ), Double.valueOf( per11Val ),
-                (List<Double>) pressureCalculateService.getPlateformResultMap().get( MetroConstant.PREFFIX_LINE + 2 + MetroConstant.SUFFIX_LINE ),
-                (List<Double>) pressureCalculateService.getPlateformResultMap().get( MetroConstant.PREFFIX_LINE + 11 + MetroConstant.SUFFIX_LINE),
-                PressureTypeEnum.PLATEFORM);
+        String[] lineCodeArr = lineCodeStr.split( "," );
 
-        pressureCalculateService.calPressureLevelAvg("2", "11",
-                Double.valueOf( per2Val ), Double.valueOf( per11Val ),
-                (List<Double>) pressureCalculateService.getEscalatorResultMap().get( MetroConstant.PREFFIX_LINE + 2 + MetroConstant.SUFFIX_LINE ),
-                (List<Double>) pressureCalculateService.getEscalatorResultMap().get( MetroConstant.PREFFIX_LINE + 11 + MetroConstant.SUFFIX_LINE),
-                PressureTypeEnum.Escalator);
+        String lineCodeFirst = lineCodeArr[0];
+        String lineCodeSecond = lineCodeArr[1];
 
-        pressureCalculateService.calPressureLevelAvg("2", "11",
-                Double.valueOf( per2Val ), Double.valueOf( per11Val ),
-                (List<Double>) pressureCalculateService.getGateResultMap().get( MetroConstant.PREFFIX_LINE + 2 + MetroConstant.SUFFIX_LINE ),
-                (List<Double>) pressureCalculateService.getGateResultMap().get( MetroConstant.PREFFIX_LINE + 11 + MetroConstant.SUFFIX_LINE),
-                PressureTypeEnum.GATE);
 
-        pressureCalculateService.calPressureLevelAvg("2", "11",
-                Double.valueOf( per2Val ), Double.valueOf( per11Val ),
-                (List<Double>) pressureCalculateService.getEntranceResultMap().get( MetroConstant.PREFFIX_LINE + 2 + MetroConstant.SUFFIX_LINE ),
-                (List<Double>) pressureCalculateService.getEntranceResultMap().get( MetroConstant.PREFFIX_LINE + 11 + MetroConstant.SUFFIX_LINE),
-                PressureTypeEnum.ENTRANCE);
+        Map<String, Object> plateformResultMap =
+            pressureCalculateService.calPressureLevelAvg( lineCodeFirst, lineCodeSecond,
+                    Double.valueOf( per2Val ), Double.valueOf( per11Val ),
+                    pressureLevelResultService.getDataList( lineCodeFirst, stationNameCode, PressureTypeEnum.PLATEFORM ),
+                    pressureLevelResultService.getDataList( lineCodeSecond, stationNameCode, PressureTypeEnum.PLATEFORM ),
+                    PressureTypeEnum.PLATEFORM, stationNameCode);
 
-        pressureCalculateService.calPressureLevelAvg("2", "11",
-                Double.valueOf( per2Val ), Double.valueOf( per11Val ),
-                (List<Double>) pressureCalculateService.getTransferPassageResultMap().get( MetroConstant.PREFFIX_LINE + 2 + MetroConstant.SUFFIX_LINE ),
-                (List<Double>) pressureCalculateService.getTransferPassageResultMap().get( MetroConstant.PREFFIX_LINE + 11 + MetroConstant.SUFFIX_LINE),
-                PressureTypeEnum.TRANSFER_PASSAGE);
+        plateformResultMap.putAll( pressureLevelStatisticsService.calculateAvgLevelAndScore( lineCodeFirst, lineCodeSecond,
+                Double.valueOf( per2Val ), Double.valueOf( per11Val), stationNameCode, PressureTypeEnum.PLATEFORM) );
 
-        model.addAttribute( "plateformResultMap", pressureCalculateService.getPlateformResultMap() );
-        model.addAttribute( "escalatorResultMap", pressureCalculateService.getEscalatorResultMap() );
-        model.addAttribute( "gateResultMap", pressureCalculateService.getGateResultMap() );
+
+
+        Map<String, Object> escalatorResultMap =
+                    pressureCalculateService.calPressureLevelAvg( lineCodeFirst, lineCodeSecond,
+                    Double.valueOf( per2Val ), Double.valueOf( per11Val ),
+                    pressureLevelResultService.getDataList( lineCodeFirst, stationNameCode, PressureTypeEnum.Escalator  ),
+                    pressureLevelResultService.getDataList( lineCodeSecond, stationNameCode, PressureTypeEnum.Escalator  ),
+                    PressureTypeEnum.Escalator, stationNameCode );
+
+        escalatorResultMap.putAll( pressureLevelStatisticsService.calculateAvgLevelAndScore( lineCodeFirst, lineCodeSecond,
+                Double.valueOf( per2Val ), Double.valueOf( per11Val), stationNameCode, PressureTypeEnum.Escalator ) );
+
+        Map<String, Object> gateResultMap =
+                    pressureCalculateService.calPressureLevelAvg( lineCodeFirst, lineCodeSecond,
+                    Double.valueOf( per2Val ), Double.valueOf( per11Val ),
+                    pressureLevelResultService.getDataList( lineCodeFirst, stationNameCode, PressureTypeEnum.GATE  ),
+                    pressureLevelResultService.getDataList( lineCodeSecond, stationNameCode, PressureTypeEnum.GATE  ),
+                    PressureTypeEnum.GATE, stationNameCode );
+
+        gateResultMap.putAll( pressureLevelStatisticsService.calculateAvgLevelAndScore( lineCodeFirst, lineCodeSecond,
+                Double.valueOf( per2Val ), Double.valueOf( per11Val), stationNameCode, PressureTypeEnum.GATE ) );
+
+
+
+        model.addAttribute( "plateformResultMap", plateformResultMap );
+        model.addAttribute( "escalatorResultMap", escalatorResultMap );
+        model.addAttribute( "gateResultMap", gateResultMap );
         model.addAttribute( "entranceResultMap", pressureCalculateService.getEntranceResultMap() );
         model.addAttribute( "transferPassageResultMap", pressureCalculateService.getTransferPassageResultMap() );
 
