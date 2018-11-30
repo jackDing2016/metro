@@ -1,30 +1,58 @@
 $(document).ready(function () {
 
     // 客流权重计算
-    var num2Sum = Number( $( '[name=num2]:eq(0)' ).val() );
-    var num11Sum = Number( $( '[name=num11]:eq(0)' ).val() );
-    var per2Val, per11Val;
-    var numSum = num2Sum + num11Sum;
-    per2Val = num2Sum / numSum;
-    per11Val = num11Sum / numSum;
 
-    $( '[name=percent2]' ).val( per2Val );
-    $( '[name=percent11]' ).val( per11Val );
+    var lineCodeStr = $( '#lineCodeStr' ).val();
 
-    // $.each( $( '[name=percent2]' ), function () {
-    //     $( this ).val( per2Val );
-    // } );
-    //
-    // $.each( $( '[name=percent11]' ), function () {
-    //     $( this ).val( per11Val );
-    // } );
+    // lineCodeStr = '2';
 
-    ;
+    var lineCodeArr = lineCodeStr.split( ',' );
+
+
+
+    // 权重
+    var percent = '';
+
+    // 此站如果有多条线路
+    if ( lineCodeArr.length > 1 ) {
+
+        var num2Sum = Number( $( '[name=num2]:eq(0)' ).val() );
+        var num11Sum = Number( $( '[name=num11]:eq(0)' ).val() );
+        var per2Val, per11Val;
+        var numSum = num2Sum + num11Sum;
+        per2Val = num2Sum / numSum;
+        per11Val = num11Sum / numSum;
+
+        $( '[name=percent2]' ).val( per2Val );
+        $( '[name=percent11]' ).val( per11Val );
+
+        percent = '?per2Val=' + per2Val + '&&per11Val=' + per11Val;
+
+    }
+    else {
+
+        $( '[name=percent2]' ).val( '1.00' );
+
+        percent = '?per2Val=' + per2Val;
+
+        $.each( $( '[name=percent11]' ), function () {
+
+            $( this ).parents( 'div:eq(1)' ).hide();
+
+        } );
+
+
+    }
+
+
+
+
+
+
     // param
     var param = '';
 
-    // 权重
-    var percent = '?per2Val=' + per2Val + '&&per11Val=' + per11Val;
+
 
     // lineCodeStr
     var lineCodeStr = '&&lineCodeStr=' + $( '#lineCodeStr' ).val();

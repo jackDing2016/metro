@@ -42,9 +42,19 @@ public class StationController {
 
 
     @GetMapping("/toAddDetailPage")
-    public  String toAddDetailPage(Model model, String stationName, String stationNameCode) {
+    public  String toAddDetailPage(Model model,
+                                   @RequestParam String stationName,
+                                   @RequestParam String stationNameCode,
+                                   @RequestParam String lineCodeStr ) {
         model.addAttribute( "stationName", stationName );
         model.addAttribute( "stationNameCode", stationNameCode );
+
+        String[] lineCodeArr = lineCodeStr.split( "," );
+
+        model.addAttribute( "lineCodeFirst", lineCodeArr[0] );
+        if ( lineCodeArr.length > 1 )
+            model.addAttribute( "lineCodeSecond", lineCodeArr[1] );
+
         return "part-detail-2";
     }
 

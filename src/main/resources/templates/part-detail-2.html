@@ -111,14 +111,17 @@
         <ul class="nav nav-tabs card-header-tabs" id="myTabs" role="tablist">
             <li class="nav-item" role="presentation">
                 <a class="nav-link active" href="#line01" id="station-tab" role="tab" data-toggle="tab" aria-controls="station" aria-expanded="false">
-                    2号线<input type="hidden" value="2">
+                    <span th:text="${lineCodeFirst}" />号线<input type="hidden" th:value="${lineCodeFirst}" />
                 </a>
             </li>
+
+            <div th:if="${lineCodeSecond != null}">
             <li class="nav-item" role="presentation">
                 <a class="nav-link" href="#line02" id="station-tab" role="tab" data-toggle="tab" aria-controls="station" aria-expanded="false">
-                    11号线<input type="hidden" value="11">
+                    <span th:text="${lineCodeSecond}" />号线<input type="hidden" th:value="${lineCodeSecond}" />
                 </a>
             </li>
+            </div>
             <!--<li class="nav-item" role="presentation">-->
                 <!--<a class="nav-link" href="#line03" id="station-tab" role="tab" data-toggle="tab" aria-controls="station" aria-expanded="false">-->
                     <!--8号线<input type="hidden" value="8">-->

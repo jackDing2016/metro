@@ -57,7 +57,8 @@ public class PressureCalculationController {
     }
 
     @GetMapping(value = "/toPressureAllTypeStatisticsPage")
-    public String toPressureAllTypeStatisticsPage( Model model,@RequestParam(required = false) String per2Val,
+    public String toPressureAllTypeStatisticsPage( Model model,
+                                                   @RequestParam(required = false) String per2Val,
                                                    @RequestParam(required = false) String per11Val,
                                                    @RequestParam String lineCodeStr,
                                                    @RequestParam String stationNameCode) {
