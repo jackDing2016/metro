@@ -12,10 +12,21 @@ public interface PressureCalculateService {
 
     void calEntrance( String lineCode, String dataStr, String inputDataStr );
 
+    /**
+     *
+     * @param lineCode
+     * @param plateformArea
+     * @param importNumber
+     * @param transferIntoNumber
+     * @param exportNumber
+     * @param transferOutNumber
+     * @param stationNameCode
+     * @param headWay 发车间隔
+     */
     void calPlateform(String lineCode, Double plateformArea,
                       List<Integer> importNumber, List<Integer> transferIntoNumber,
                       List<Integer> exportNumber, List<Integer> transferOutNumber,
-                      String stationNameCode);
+                      String stationNameCode, Double headWay);
 
     /**
      * 计算压力等级的平均值

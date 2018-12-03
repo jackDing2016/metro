@@ -103,7 +103,7 @@ public class StationController {
                 trafficDataService.getDataList( TrafficTypeEnum.EXPORT, TimeIntervalTypeEnum.FIFTEEN_MINUTE,
                         3, 26, lineCode, stationNameCode),
                 transferDataService.getDataList( lineCode, stationNameCode, TransferTypeEnum.TRANSFER_OUT),
-                stationNameCode
+                stationNameCode, plateform.getHeadWay()
                 );
 
 

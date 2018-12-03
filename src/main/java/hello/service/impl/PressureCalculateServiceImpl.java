@@ -50,7 +50,7 @@ public class PressureCalculateServiceImpl implements PressureCalculateService {
     public void calPlateform(String lineCode, Double plateformArea,
                              List<Integer> importNumber, List<Integer> transferIntoNumber,
                              List<Integer> exportNumber, List<Integer> transferOutNumber,
-                             String stationNameCode) {
+                             String stationNameCode, Double headWay) {
 
         List<String> resultList = new ArrayList<>();
         // 用于计算加权平均值
@@ -60,9 +60,14 @@ public class PressureCalculateServiceImpl implements PressureCalculateService {
 
         for ( int i = 0; i < 8; i++ ) {
 
-            double pPlateform =
-                    (importNumber.get(i) + transferIntoNumber.get(i) + exportNumber.get(i) + transferOutNumber.get(i)) /
-                            ( 4 *  plateformArea * 1.67);
+            // 实际客流量
+            Integer actualP =  importNumber.get(i) + transferIntoNumber.get(i)
+                    + exportNumber.get(i) + transferOutNumber.get(i);
+
+            // 列车到站对数
+            Double subWayN = 15 * 60 / headWay;
+
+            double pPlateform = actualP /  ( subWayN *  plateformArea * 1.67);
 
             double pMax = pPlateform * 1.3;
 
