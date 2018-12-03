@@ -61,8 +61,11 @@ public class PressureCalculateServiceImpl implements PressureCalculateService {
         for ( int i = 0; i < 8; i++ ) {
 
             // 实际客流量
-            Integer actualP =  importNumber.get(i) + transferIntoNumber.get(i)
-                    + exportNumber.get(i) + transferOutNumber.get(i);
+            Integer actualP =  importNumber.get(i) + exportNumber.get(i);
+
+            // 有换乘的加上换乘
+            if ( transferIntoNumber.size() > 0 )
+                actualP += transferIntoNumber.get(i) + transferOutNumber.get(i);
 
             // 列车到站对数
             Double subWayN = 15 * 60 / headWay;
@@ -266,7 +269,12 @@ public class PressureCalculateServiceImpl implements PressureCalculateService {
 
         for ( int i = 0; i < 8; i++ ) {
 
-            Integer w = ( exportNumber.get(i) + transferOutNumber.get(i) );
+            Integer w = exportNumber.get(i);
+
+            // 有换乘的加上换乘数据
+            if ( transferOutNumber.size() > 0 )
+                w += transferOutNumber.get(i);
+
             // 15min内，每组楼梯和扶梯服务的乘客数
             Integer q = w /  plateEscalatorNum;
             // 输入时间

@@ -31,7 +31,8 @@ $(document).ready(function () {
     }
     else {
 
-        $( '[name=percent2]' ).val( '1.00' );
+        per2Val = 1.00;
+        $( '[name=percent2]' ).val( per2Val );
 
         percent = '?per2Val=' + per2Val;
 
@@ -41,13 +42,7 @@ $(document).ready(function () {
 
         } );
 
-
     }
-
-
-
-
-
 
     // param
     var param = '';
@@ -60,7 +55,10 @@ $(document).ready(function () {
     // stationNameCode
     var stationNameCode = '&&stationNameCode=' + $( '#stationNameCode' ).val();
 
-    param = percent + lineCodeStr + stationNameCode;
+    // stationName
+    var stationName = '&&stationName=' + $( '#stationName' ).val();
+
+    param = percent + lineCodeStr + stationNameCode + stationName;
 
     $( '#plateformResBtn' ).click( function () {
         window.location.href = '/pressureCalculation/toPressureCalculationResultPage/1' + param;

@@ -45,7 +45,7 @@ public class PressureLevelStatisticsServiceImpl implements PressureLevelStatisti
         }
 
         Double avgVal=
-                ( sum * Double.valueOf( weightOne ) + sum2 * Double.valueOf( weightTwo  )) / ( dataList1.size() );
+                ( sum * Double.valueOf( weightOne ) + sum2 * Double.valueOf(  weightTwo == null ? 0 : weightTwo  )) / ( dataList1.size() );
 
         String avgLevel = null;
         String avgScore = null;

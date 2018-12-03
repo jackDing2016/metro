@@ -341,7 +341,7 @@ var calculateData =  function ( submitData ) {
         success: function (data) {
             console.log( 111 );
             window.location.href = '/pressureCalculation/toPressureTypeSelectPage?lineCodeStr='
-                + lineCodeStr + '&&stationNameCode=' + $( '#stationNameCodeVal' ).val();
+                + lineCodeStr + '&&stationNameCode=' + $( '#stationNameCodeVal' ).val() + '&&stationName=' + $( '#stationNameVal' ).val();
         }
     });
 }

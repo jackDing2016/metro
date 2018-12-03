@@ -48,10 +48,12 @@ public class PressureCalculationController {
     public String toPressureTypeSelectPage(
             @RequestParam( required = true) String lineCodeStr,
             @RequestParam( required = true) String stationNameCode,
+            @RequestParam( required = true) String stationName,
             Model model) {
 
         model.addAttribute( "lineCodeStr", lineCodeStr );
         model.addAttribute( "stationNameCode", stationNameCode );
+        model.addAttribute( "stationName", stationName );
 
         return "choose-part";
     }
@@ -124,12 +126,12 @@ public class PressureCalculationController {
                                        @RequestParam( required = false ) String per2Val,
                                        @RequestParam( required = false ) String per11Val,
                                        @RequestParam( required = true) String lineCodeStr,
-                                       @RequestParam( required = true) String stationNameCode) {
+                                       @RequestParam( required = true) String stationNameCode,
+                                       @RequestParam( required = true) String stationName) {
 
         String viewName = null;
 
         PressureTypeEnum pressureTypeEnum = null;
-
 
         if ( PressureTypeEnum.PLATEFORM.getCode() == pressureType ) {
             viewName = "result-part-zt";
@@ -153,11 +155,10 @@ public class PressureCalculationController {
             pressureTypeEnum = PressureTypeEnum.TRANSFER_PASSAGE;
         }
 
-        model.addAttribute( "per2Val", per2Val );
-        model.addAttribute( "per11Val", per11Val );
-
+        model.addAttribute( "lineCodeArr", lineCodeStr.split( "," ) );
         model.addAttribute( "lineCodeStr", lineCodeStr );
         model.addAttribute( "stationNameCode", stationNameCode );
+        model.addAttribute( "stationName", stationName );
 
         if ( !StringUtils.isEmpty( per2Val )) {
 
@@ -165,18 +166,43 @@ public class PressureCalculationController {
 
                 String[] lineCodeArr = lineCodeStr.split( "," );
 
+                Map<String, Double> lineWeightMap = new HashMap<>();
+
+                // 暂时从简
+                Integer index = 0;
+                for ( String lineCode : lineCodeArr ) {
+
+                    if ( index ==  0 )
+                        lineWeightMap.put( lineCode, Double.valueOf( per2Val ) );
+                    else
+                        lineWeightMap.put( lineCode, Double.valueOf( per11Val ) );
+
+                    index++;
+
+                }
+
+                model.addAttribute( "lineWeightMap", lineWeightMap );
+
+
+                Map<String, String> resultMap = null;
+
                 if ( lineCodeArr.length == 2 ) {
 
                     // 计算加权平均值
-                    Map<String, String> resultMap =
+                    resultMap =
                         pressureLevelStatisticsService.calculateAvgLevelAndScore( lineCodeArr[0], lineCodeArr[1],
                                 Double.valueOf( per2Val ), Double.valueOf( per11Val ),
                                 stationNameCode, pressureTypeEnum);
-
-                    model.addAttribute( "avgLevel", resultMap.get( "avgLevel") );
-                    model.addAttribute( "avgScore", resultMap.get( "avgScore") );
-
                 }
+                else {
+                    resultMap =
+                            pressureLevelStatisticsService.calculateAvgLevelAndScore( lineCodeArr[0], null,
+                                    Double.valueOf( per2Val ), null,
+                                    stationNameCode, pressureTypeEnum);
+                }
+
+                model.addAttribute( "avgLevel", resultMap.get( "avgLevel") );
+                model.addAttribute( "avgScore", resultMap.get( "avgScore") );
 
             }
 

@@ -89,7 +89,17 @@ function chartresize(){
             <!--站台-->
             
             <div class="pressure_head">
-                <span class="ln2">2</span><span class="ln11">11</span>江苏路
+                <!--<span class="ln2">2</span>-->
+                <!--<span class="ln11">11</span>-->
+
+                <!--<span th:text="${stationName}"></span>-->
+                <div th:each="lineCode : ${lineCodeArr}">
+                    <span th:class="ln+${lineCode}" th:text="${lineCode}"></span>
+                </div>
+
+                <span th:text="${stationName}" th:remove="tag">title</span>
+
+
                 <div class="result-tab">
                 <ul class="nav nav-tabs card-header-tabs " id="myTabs" role="tablist">
                   <li class="nav-item" role="presentation">
@@ -123,16 +133,12 @@ function chartresize(){
                                     </tr>
                                   </thead>
                                   <tbody>
-                                   <tr>
-                                      <td>2号线</td>
-                                      <!--<td>${}</td>-->
-                                      <td th:text="${per2Val}"></td>
+
+                                    <tr th:each="lineWeight : ${lineWeightMap}">
+                                        <td th:text="${lineWeight.key}+号线"></td>
+                                        <td th:text="${lineWeight.value}"></td>
                                     </tr>
-                                    <tr>
-                                      <td>11号线</td>
-                                      <!--<td>1</td>-->
-                                        <td th:text="${per11Val}"></td>
-                                    </tr>
+
                                   </tbody>
                                 </table> 
             

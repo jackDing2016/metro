@@ -38,7 +38,6 @@ $(document).ready(function () {
                     text: '站台口压力等级'
                 },
                 legend: {
-                    data:['2号线（工作日）','11号线（工作日）','综合压力等级'],
                     top:'7%'
                 },
                 tooltip : {
@@ -59,46 +58,35 @@ $(document).ready(function () {
                         }
                         return res;
                     }
-                },
+                }
 
-                series: [
-                    {
-                    // data: ['A', 'B',  'A',  'D',  'A', 'C', 'A','E'],
-                    data : data.line2,
-                    type: 'line',
-                    areaStyle:{},
-                    name:'2号线（工作日）',
-                    itemStyle : {
-                        normal : {
-                            lineStyle:{
-                                width:5,//折线宽度
+            };
+            
+            var optionLegendData = [];
+            var optionSeries = [];
+            for ( var key in data ) {
+                console.log( 'key is '  );
+                console.log( key);
+                var dataTitle = key.substring( key.indexOf( 'e' ) + 1, key.length )+ '号线（工作日）' ;
+                optionLegendData.push( dataTitle );
 
-                            }
+                var seriesData = {};
+                seriesData.data = data[ key ];
+                seriesData.type = 'line';
+                seriesData.name = dataTitle;
+                seriesData.areaStyle = {};
+                seriesData.itemStyle = {
+                    normal : {
+                        lineStyle:{
+                            width:5,//折线宽度
                         }
                     }
+                }
+                optionSeries.push( seriesData );
 
-
-
-                },
-                    {
-                        // data: ['A', 'B',  'A',  'D',  'A', 'C', 'A','E'],
-                        data : data.line11,
-                        type: 'line',
-                        areaStyle:{},
-                        name:'11号线（工作日）',
-                        itemStyle : {
-                            normal : {
-                                lineStyle:{
-                                    width:5,//折线宽度
-
-                                }
-                            }
-                        }
-
-
-
-                    }
-                ] };
+            }
+            option.legend.data = optionLegendData;
+            option.series = optionSeries;
 
             // 使用刚指定的配置项和数据显示图表。
             myChart.setOption(option);
