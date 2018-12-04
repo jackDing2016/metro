@@ -10,7 +10,7 @@ import java.util.Map;
 
 public interface PressureCalculateService {
 
-    void calEntrance( String lineCode, String dataStr, String inputDataStr );
+    List<Double> calEntrance( String lineCode, String dataStr, String inputDataStr );
 
     /**
      *
@@ -129,7 +129,12 @@ public interface PressureCalculateService {
      */
     String calLevel( Double data );
 
-    void  calEntranceAll( StationAddParam stationAddParam );
+    /**
+     * 出口压力等级计算
+     * @param stationAddParam
+     * @return
+     */
+    void   calEntranceAll( StationAddParam stationAddParam );
 
     Map<String, Object> getEntranceResultMap();
 

@@ -161,7 +161,7 @@ public class PressureCalculateServiceImpl implements PressureCalculateService {
     }
 
     @Override
-    public void calEntrance(String lineCode, String dataStr, String inputDataStr) {
+    public List<Double> calEntrance(String lineCode, String dataStr, String inputDataStr) {
         try {
             String[] args1 = new String[] { "E:\\Python27\\python", "E:\\learn\\java\\jyni\\churukou1107.py",
                     String.valueOf( dataStr ), String.valueOf( inputDataStr ) };
@@ -173,23 +173,28 @@ public class PressureCalculateServiceImpl implements PressureCalculateService {
 
             String result = null;
 
-            List<String> dataList = new ArrayList<>();
+//            List<String> dataList = new ArrayList<>();
+
+            List<Double> resultValueList = new ArrayList<>();
 
             while ((line = in.readLine()) != null) {
                 System.out.println(line);
                 if ( line.startsWith( "precent" ) ) {
                     result = line.split( "=" )[1];
 
-                    String level = calLevel( Double.valueOf( result ) );
+//                    String level = calLevel( Double.valueOf( result ) );
 
-                    dataList.add( level );
+//                    dataList.add( level );
+
+                    resultValueList.add( Double.valueOf( result ) );
 
                 }
             }
             in.close();
             proc.waitFor();
-            entranceMap.put( "line" + lineCode, dataList );
+//            entranceMap.put( "line" + lineCode, dataList );
 
+            return resultValueList;
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -197,13 +202,14 @@ public class PressureCalculateServiceImpl implements PressureCalculateService {
             e.printStackTrace();
         }
 //        return 0.0;
+        return null;
     }
 
     @Override
     public String calLevel(Double data) {
 
         String res = null;
-        if ( data > 0 && data <= 0.2 )
+        if ( data >= 0 && data <= 0.2 )
             res = "E";
         else if ( data >0.2 && data <= 0.3 )
             res = "D";
@@ -227,12 +233,10 @@ public class PressureCalculateServiceImpl implements PressureCalculateService {
 
         String stationNameCode = stationAddParam.getPlateform().getStationNameCode();
 
+        List<List<Double>> dataListList = new ArrayList<>();
         for ( Entrance entrance : entrances ) {
 
             StringBuffer inputArrSb = new StringBuffer();
-
-
-
 
             List<Integer> referenceDataList =
                 trafficDataService.getDataList( TrafficTypeEnum.IMPORT, TimeIntervalTypeEnum.FIVE_MINUTE ,
@@ -249,9 +253,29 @@ public class PressureCalculateServiceImpl implements PressureCalculateService {
 
             String inputData = inputArrSb.toString().substring( 0, inputArrSb.lastIndexOf( "," ) );
 
-            calEntrance( lineCode,  referenceData, inputData);
+            dataListList.add( calEntrance( lineCode,  referenceData, inputData) );
 
         }
+
+        List<PressureLevelResult> pressureLevelResultList = new ArrayList<>();
+        Double entranceWeight = 1.0 / dataListList.size();
+        for ( int i = 0; i < dataListList.get(0).size(); i++ ) {
+
+            Double avgResultVal = 0.0;
+            for ( int j = 0; j < dataListList.size(); j++ ) {
+                avgResultVal += dataListList.get( j ).get( i ) * entranceWeight;
+            }
+
+            // 一共24个 每3个取1个 暂时从简
+            if ( i % 3 == 0 ) {
+                PressureLevelResult pressureLevelResult = getPressureLevelResult(lineCode, stationNameCode,
+                        i, avgResultVal, calLevel( avgResultVal ), PressureTypeEnum.ENTRANCE);
+                pressureLevelResultList.add( pressureLevelResult );
+            }
+        }
+
+        // 删除原来的 暂时从简
+        savePressureResultData(lineCode, stationNameCode, pressureLevelResultList, PressureTypeEnum.ENTRANCE);
 
     }
 

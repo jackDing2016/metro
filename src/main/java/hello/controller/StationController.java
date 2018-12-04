@@ -83,18 +83,8 @@ public class StationController {
         // 比如jiangsulu
         String stationNameCode = plateform.getStationNameCode();
 
-        String stationName = "jiangsuRoad";
-
-        Map<String, Object> lineDataMap =
-            lineDataService.getLineDataMap( lineCode );
 
         // 站台压力  start
-        // plateformArea:2083
-//        pressureCalculateService.calPlateform( lineCode, plateform.getEffectiveArea(),
-//                Arrays.asList( ( Integer[] ) lineDataMap.get( MetroConstant.KEY_IMPORTNUMBERARR + stationName ) ),
-//                Arrays.asList( ( Integer[] ) lineDataMap.get( MetroConstant.KEY_TRANSFERINTONUMBERARR + stationName ) ),
-//                Arrays.asList( ( Integer[] ) lineDataMap.get( MetroConstant.KEY_EXPORTNUMBERARR + stationName ) ),
-//                Arrays.asList( ( Integer[] ) lineDataMap.get( MetroConstant.KEY_TRANSFEROUTNUMBERARR + stationName ) ));
 
         pressureCalculateService.calPlateform( lineCode, plateform.getEffectiveArea(),
                 trafficDataService.getDataList( TrafficTypeEnum.IMPORT, TimeIntervalTypeEnum.FIFTEEN_MINUTE,
@@ -125,25 +115,14 @@ public class StationController {
 
         }
 
-
         // 出入口压力
         pressureCalculateService.calEntranceAll( stationAddParam );
-
 
         // 闸机压力
         Gate gate = stationAddParam.getGate();
 
-
-
-
         if ( gate != null ) {
             // 进站安检
-//            List<Double> gateImportResList =
-//                    pressureCalculateService.calGateImportExport( lineCode,
-//                            Arrays.asList( ( Integer[] ) lineDataMap.get( MetroConstant.KEY_5MINIMPORTNUMBERARR + stationName ) ),
-//                            gate.getSecNum(), gate.getAvgSecTime());
-
-;
             List<Double> gateImportResList =
                     pressureCalculateService.calGateImportExport( lineCode,
                             trafficDataService.getDataList(TrafficTypeEnum.IMPORT, TimeIntervalTypeEnum.FIVE_MINUTE,
@@ -151,25 +130,19 @@ public class StationController {
                             gate.getSecNum(), gate.getAvgSecTime());
 
             // 出闸机
-//            List<Double> gateExportResList =
-//                    pressureCalculateService.calGateImportExport( lineCode,
-//                            Arrays.asList( ( Integer[] ) lineDataMap.get( MetroConstant.KEY_5MINEXPORTNUMBERARR + stationName ) ),
-//                            gate.getExitGateNum(), gate.getAvgPassExitGateTime());
-
             List<Double> gateExportResList =
                     pressureCalculateService.calGateImportExport( lineCode,
                             trafficDataService.getDataList(TrafficTypeEnum.EXPORT, TimeIntervalTypeEnum.FIVE_MINUTE,
                                     null, null, lineCode, stationNameCode),
                             gate.getExitGateNum(), gate.getAvgPassExitGateTime());
 
-
+            // 计算闸机
             pressureCalculateService.calGate( lineCode,
                     gateImportResList, gateExportResList,
                     gate.getWeitghEntrance(), gate.getWeightExit(), stationNameCode );
         }
 
         // 换乘通道压力
-
         List<TransferPassage> transferPassageList = stationAddParam.getTransferPassages();
 
         if ( transferPassageList != null && transferPassageList.size() > 0 ) {

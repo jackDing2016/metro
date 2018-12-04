@@ -2,7 +2,7 @@ $(document).ready(function () {
 
     $.ajax({
         type: 'get',
-        url: '/pressureCalculation/calculateResult/1',
+        url: '/pressureCalculation/calculateResult/' + $( '#pressureTypeCode' ).val(),
         dataType : 'json',
         data: {
             lineCodeStr : $( '#lineCodeStr' ).val(),
@@ -35,7 +35,7 @@ $(document).ready(function () {
                     right:'5%',
                 },
                 title: {
-                    text: '站台口压力等级'
+                    text: $( '#pressureTypeName' ).val() + '压力等级'
                 },
                 legend: {
                     top:'7%'

@@ -39,6 +39,10 @@ function chartresize(){
 
 <input type="hidden" th:value="${lineCodeStr}" id="lineCodeStr" />
 <input type="hidden" th:value="${stationNameCode}" id="stationNameCode" />
+<input type="hidden" th:value="${pressureTypeCode}" id="pressureTypeCode" />
+<input type="hidden" th:value="${pressureTypeName}" id="pressureTypeName" />
+
+
 
  <div class="header">
     <div class="header-in">
@@ -50,10 +54,10 @@ function chartresize(){
        </div>
     </div>
  </div>
- 
+
 
  <div class="container">
-    <div class="card" style="margin-top: 20px;"> 
+    <div class="card" style="margin-top: 20px;">
         <div class="pressure_result" >
             <!--站台-->
             <div class="modal fade" id="pre-1-info" role="dialog" aria-labelledby="myModalLabel">
@@ -87,12 +91,8 @@ function chartresize(){
                 </div>
             </div>
             <!--站台-->
-            
-            <div class="pressure_head">
-                <!--<span class="ln2">2</span>-->
-                <!--<span class="ln11">11</span>-->
 
-                <!--<span th:text="${stationName}"></span>-->
+            <div class="pressure_head">
                 <div th:each="lineCode : ${lineCodeArr}">
                     <span th:class="ln+${lineCode}" th:text="${lineCode}"></span>
                 </div>
@@ -112,19 +112,19 @@ function chartresize(){
                 </ul>
                 </div>
             </div>
-            
+
             <div class="tab-content" id="myTabContent">
             <div class="card-in ylt tab-pane fade in active" role="tabpanel" id="ylt" aria-labelledby="station-tab">
             <!--车站各部分压力等级-->
-            
+
             <div id="main" class=" float-left col-9 part-pressure">
-               
+
 
             </div>
             <!--车站各部分压力等级-->
             <!--车站总压力等级-->
             <div class="float-right col-3 pressure-shuomin">
-            
+
                <table class="table table-striped table-bordered table-hover  col-12">
                                   <thead>
                                     <tr>
@@ -140,27 +140,27 @@ function chartresize(){
                                     </tr>
 
                                   </tbody>
-                                </table> 
-            
-            <div class="pressure_level col-12">              
+                                </table>
+
+            <div class="pressure_level col-12">
                 <div class="station-pre2 pressure_result part-result">
-                    <span>站台分数</span>
+                    <span th:text="${pressureTypeName}+分数"></span>
                     <p><b th:text="${avgScore}"></b></p>
-                    
+
                     <span>压力等级</span>
                     <p><b th:text="${avgLevel}"></b></p>
                     <a class="pre-all" data-toggle="modal" data-target="#pre-1-info">压力等级说明</a>
                 </div>
             </div>
-               
+
             </div>
             <!--车站总压力等级-->
             </div>
-            
+
             <div class="card-in ylmx tab-pane fade  " role="tabpanel" id="ylmx" aria-labelledby="station-tab">
-            
+
             <div id="main2" class=" float-left col-9 part-pressure">
-               
+
                 <script type="text/javascript">
                    var initchart = function(){
     var chart2 = echarts.init(document.getElementById('main2'));
@@ -171,11 +171,11 @@ function chartresize(){
         data: ['8:00-8:15', '8:15-8:30', '8:30-8:45', '8:45-9:00', '9:00-9:15','9:15-9:30', '9:30-9:45', '9:45-10:00']
     },
     yAxis: {
-        
+
         type: 'category',
         data:['E','D','C','B','A'],
         axisLine:{
-            
+
             },
         boundaryGap:false
     },
@@ -205,11 +205,11 @@ function chartresize(){
 
             for (var i = 0, l = params.length; i < l; i++) {
                 res += '<br/>' + params[i].seriesName + ' : ' + params[i].value;
-            }          
+            }
             return res;
         }
     },
-    
+
     series: [{
         data: ['D', 'B',  'B',  'A',  'A', 'B', 'B','B'],
         type: 'line',
@@ -219,11 +219,11 @@ function chartresize(){
                     normal : {
                         lineStyle:{
                             width:7,//折线宽度
-                            
+
                         }
                     }
                 },
-       
+
     },
    {
         data: ['D', 'D',  'C',  'C',  'B', 'C', 'C','C'],
@@ -234,11 +234,11 @@ function chartresize(){
                     normal : {
                         lineStyle:{
                             width:5,//折线宽度
-                            
+
                         }
                     }
                 },
-       
+
     },
     {
         data: ['D', 'D',  'D',  'D',  'C', 'C', 'D','D'],
@@ -249,13 +249,13 @@ function chartresize(){
                     normal : {
                         lineStyle:{
                             width:3,//折线宽度
-                            
+
                         }
                     }
                 },
-        
+
     },
-   
+
     {
         data: ['D', 'D',  'D',  'C',  'B', 'C', 'D','D'],
         type: 'line',
@@ -265,11 +265,11 @@ function chartresize(){
                     normal : {
                         lineStyle:{
                             width:1,//折线宽度
-                            
+
                         }
                     }
                 },
-        
+
     },
     ]
     }
@@ -289,13 +289,13 @@ function chartresize(){
         chart2.resize(width,height);
     }
 }
-                   
+
                 </script>
             </div>
             <!--车站各部分压力等级-->
             <!--车站总压力等级-->
             <div class="float-right col-3 pressure-shuomin">
-            
+
                <table class="table table-striped table-bordered table-hover  col-12">
                                   <thead>
                                     <tr>
@@ -317,36 +317,36 @@ function chartresize(){
                                       <td>1</td>
                                     </tr>
                                   </tbody>
-                                </table> 
-            
-            <div class="pressure_level col-12">              
+                                </table>
+
+            <div class="pressure_level col-12">
                 <div class="station-pre2 pressure_result part-result">
                     <span>站台分数</span>
                     <p><b>85.16</b></p>
-                    
+
                     <span>压力等级</span>
                     <p><b>B</b></p>
                     <a class="pre-all" data-toggle="modal" data-target="#pre-1-info">压力等级说明</a>
                 </div>
             </div>
-               
+
             </div>
             <!--车站总压力等级-->
-            
+
             </div>
             </div>
         </div>
-    </div>  
-    <!--card--> 
+    </div>
+    <!--card-->
     <!--按钮栏-->
     <div class="btn-line-result row float-left">
         <a class="btn btn-secondary col-2" href="javascript:history.back(-1)" role="button">返回上一页</a>
     </div>
     <!--按钮栏-->
-   
- </div>
- <!--container-->		
 
-            
+ </div>
+ <!--container-->
+
+
 </body>
 </html>  

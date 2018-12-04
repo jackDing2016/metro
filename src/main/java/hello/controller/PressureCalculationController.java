@@ -133,21 +133,12 @@ public class PressureCalculationController {
 
         PressureTypeEnum pressureTypeEnum = null;
 
-        if ( PressureTypeEnum.PLATEFORM.getCode() == pressureType ) {
+        if ( PressureTypeEnum.PLATEFORM.getCode() == pressureType ||
+                PressureTypeEnum.Escalator.getCode() == pressureType ||
+                PressureTypeEnum.GATE.getCode() == pressureType ||
+                PressureTypeEnum.ENTRANCE.getCode() == pressureType) {
             viewName = "result-part-zt";
-            pressureTypeEnum = PressureTypeEnum.PLATEFORM;
-        }
-        else if ( PressureTypeEnum.ENTRANCE.getCode() == pressureType ) {
-            viewName = "result-part-crk";
-            pressureTypeEnum = PressureTypeEnum.ENTRANCE;
-        }
-        else if ( PressureTypeEnum.Escalator.getCode() == pressureType ) {
-            viewName = "result-part-lft";
-            pressureTypeEnum = PressureTypeEnum.Escalator;
-        }
-        else if ( PressureTypeEnum.GATE.getCode() == pressureType ) {
-            viewName = "result-part-zj";
-            pressureTypeEnum = PressureTypeEnum.GATE;
+            pressureTypeEnum = PressureTypeEnum.getByCode( pressureType );
         }
 
         else if ( PressureTypeEnum.TRANSFER_PASSAGE.getCode() == pressureType ) {
@@ -159,6 +150,8 @@ public class PressureCalculationController {
         model.addAttribute( "lineCodeStr", lineCodeStr );
         model.addAttribute( "stationNameCode", stationNameCode );
         model.addAttribute( "stationName", stationName );
+        model.addAttribute( "pressureTypeName", PressureTypeEnum.getByCode( pressureType ).getName() );
+        model.addAttribute( "pressureTypeCode", pressureType );
 
         if ( !StringUtils.isEmpty( per2Val )) {
 
