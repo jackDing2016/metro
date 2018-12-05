@@ -150,12 +150,13 @@ public class StationController {
             // 目前就算一个
             TransferPassage transferPassage = transferPassageList.get(0);
 
+
             Double b = 5.30227;
             Double n = 0.43253;
             Double tCommon = 130.0;
 
             pressureCalculateService.calTransferPassage( stationAddParam.getPlateform().getLineCode() + "",
-                    transferPassage.getPassageLength(), tCommon, b, n, transferPassage.getTransferPassageFlowList()  );
+                    transferPassage.getPassageLength(), tCommon, b, n, transferPassage.getTransferPassageFlowList(), stationNameCode  );
 
         }
 

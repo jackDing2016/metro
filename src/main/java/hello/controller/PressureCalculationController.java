@@ -2,6 +2,7 @@ package hello.controller;
 
 import hello.constant.MetroConstant;
 import hello.constant.PressureTypeEnum;
+import hello.entity.PressureLevelResult;
 import hello.param.PressureCalculateParam;
 import hello.service.PressureCalculateService;
 import hello.service.PressureLevelResultService;
@@ -205,6 +206,13 @@ public class PressureCalculationController {
 
     }
 
+    /**
+     * 用于站台、楼扶梯、闸机、出入口
+     * @param pressureType
+     * @param lineCodeStr
+     * @param stationNameCode
+     * @return
+     */
     @GetMapping(  value = "/calculateResult/{pressureType}")
     public @ResponseBody Map<String, Object> calculateResult(
             @PathVariable( name = "pressureType") Integer pressureType,
@@ -222,8 +230,37 @@ public class PressureCalculationController {
         resultMap = pressureLevelResultService.getDataLevelListMap( lineCodeArr,
                 stationNameCode, pressureTypeEnum);
 
-
         return  resultMap;
+
+    }
+
+    @GetMapping(  value = "/calculateResultForTransferPassage")
+    public @ResponseBody List<String> calculateResultForTransferPassage(
+            @RequestParam( required = true) String lineCodeStr,
+            @RequestParam( required = true ) String stationNameCode
+    ) {
+
+        Map<String, Object> resultMap = null;
+
+        String[] lineCodeArr = lineCodeStr.split( "," );
+
+        List<Double> dataListFirst = pressureLevelResultService.getDataList( lineCodeArr[0],
+                stationNameCode, PressureTypeEnum.TRANSFER_PASSAGE  );
+
+        List<Double> dataListSecond = pressureLevelResultService.getDataList( lineCodeArr[1],
+                stationNameCode, PressureTypeEnum.TRANSFER_PASSAGE);
+
+        List<PressureLevelResult> pressureLevelResultList =
+            pressureCalculateService.calAvgTransferPassage( dataListFirst, dataListSecond, stationNameCode );
+
+        List<String> resultLevelList = new ArrayList<>( pressureLevelResultList.size() );
+
+        for ( PressureLevelResult pressureLevelResult : pressureLevelResultList ) {
+            resultLevelList.add( pressureLevelResult.getResultLevel() );
+        }
+
+
+        return  resultLevelList;
 
     }
 

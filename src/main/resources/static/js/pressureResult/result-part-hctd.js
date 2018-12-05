@@ -2,7 +2,7 @@ $(document).ready(function () {
 
     $.ajax({
         type: 'get',
-        url: '/pressureCalculation/calculateResult/5',
+        url: '/pressureCalculation/calculateResultForTransferPassage',
         dataType : 'json',
         data: {
             lineCodeStr : $( '#lineCodeStr' ).val(),
@@ -35,10 +35,10 @@ $(document).ready(function () {
                     right:'5%',
                 },
                 title: {
-                    text: '闸机压力等级'
+                    text: '换乘通道压力等级'
                 },
                 legend: {
-                    data:['2号线（工作日）','11号线（工作日）','综合压力等级'],
+                    data:[ '换乘通道' ],
                     top:'7%'
                 },
                 tooltip : {
@@ -63,48 +63,24 @@ $(document).ready(function () {
 
                 series: [
                     {
-                    // data: ['A', 'B',  'A',  'D',  'A', 'C', 'A','E'],
-                    data : data.line2,
+                    data : data,
                     type: 'line',
                     areaStyle:{},
-                    name:'2号线（工作日）',
+                    name:'换乘通道',
                     itemStyle : {
                         normal : {
                             lineStyle:{
                                 width:5,//折线宽度
-
                             }
                         }
                     }
-
-
 
                 },
-                    {
-                        // data: ['A', 'B',  'A',  'D',  'A', 'C', 'A','E'],
-                        data : data.line11,
-                        type: 'line',
-                        areaStyle:{},
-                        name:'11号线（工作日）',
-                        itemStyle : {
-                            normal : {
-                                lineStyle:{
-                                    width:5,//折线宽度
-
-                                }
-                            }
-                        }
-
-
-
-                    }
                 ] };
 
             // 使用刚指定的配置项和数据显示图表。
             myChart.setOption(option);
         }
     });
-
-
 
 });

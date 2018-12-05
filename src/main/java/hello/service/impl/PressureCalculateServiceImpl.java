@@ -163,8 +163,19 @@ public class PressureCalculateServiceImpl implements PressureCalculateService {
     @Override
     public List<Double> calEntrance(String lineCode, String dataStr, String inputDataStr) {
         try {
-            String[] args1 = new String[] { "E:\\Python27\\python", "E:\\learn\\java\\jyni\\churukou1107.py",
+
+            // develop environment
+            String pythonPath = "E:\\Python27\\python";
+            String pythonFilePath = "E:\\learn\\java\\jyni\\churukou1107.py";
+
+            // server environment
+//            String pythonPath = "python";
+//            String pythonFilePath = "/root/churukou1107.py";
+
+            String[] args1 = new String[] { pythonPath, pythonFilePath,
                     String.valueOf( dataStr ), String.valueOf( inputDataStr ) };
+
+
 //            String[] args1 = new String[] { "python3", "/home/jack/develop/project/metro/pressurecalculate/churukou.py", String.valueOf( dataStr )};
             Process proc = Runtime.getRuntime().exec(args1);// 执行py文件
 
@@ -268,6 +279,7 @@ public class PressureCalculateServiceImpl implements PressureCalculateService {
 
             // 一共24个 每3个取1个 暂时从简
             if ( i % 3 == 0 ) {
+                System.out.println( "balabalaba"+ i );
                 PressureLevelResult pressureLevelResult = getPressureLevelResult(lineCode, stationNameCode,
                         i, avgResultVal, calLevel( avgResultVal ), PressureTypeEnum.ENTRANCE);
                 pressureLevelResultList.add( pressureLevelResult );
@@ -469,26 +481,63 @@ public class PressureCalculateServiceImpl implements PressureCalculateService {
     @Override
     public void calTransferPassage(String lineCode, Double passageLength,
                                    Double tCommon, Double b, Double n,
-                                   List<TransferPassageFlow> transferPassageFlowList) {
+                                   List<TransferPassageFlow> transferPassageFlowList,
+                                   String stationNameCode) {
 
-        // 存等级
-        List<String> resultList = new ArrayList<>();
-        // 存值(用于计算各条线路的加权值)
-        List<Double> resultValList = new ArrayList<>();
+        List<PressureLevelResult> pressureLevelResultList = new ArrayList<>();
 
+        Integer dataOrder = 0;
         for ( TransferPassageFlow transferPassageFlow : transferPassageFlowList ) {
 
             Double result = tCommon + b * Math.pow( transferPassageFlow.getFlow(), n );
 
             result = passageLength / result;
 
-            resultValList.add( result );
-            resultList.add( calTransferPassageLevel( result ) );
+            PressureLevelResult pressureLevelResult = getPressureLevelResult(lineCode, stationNameCode,
+                    dataOrder, result, calTransferPassageLevel( result ), PressureTypeEnum.TRANSFER_PASSAGE);
+
+            pressureLevelResultList.add( pressureLevelResult );
+
+            dataOrder++;
 
         }
 
-        transferPassageMap.put( "line" + lineCode, resultList);
-        transferPassageMap.put( "line" + lineCode + "Val", resultValList );
+        // 删除原来的 暂时从简
+        savePressureResultData(lineCode, stationNameCode, pressureLevelResultList, PressureTypeEnum.TRANSFER_PASSAGE);
+
+    }
+
+    @Override
+    public List<PressureLevelResult> calAvgTransferPassage(List<Double> resultValueListFirst,
+                                      List<Double> resultValueListSecond, String stationNameCode) {
+
+        List<PressureLevelResult> pressureLevelResultList = new ArrayList<>();
+
+        if ( resultValueListFirst.size() > 0 && resultValueListSecond.size() > 0 ) {
+
+            Integer dataOrder = 0;
+            for ( int i = 0; i < resultValueListFirst.size(); i++ ) {
+
+                if ( i % 3 == 0 ) {
+
+                    Double result = ( resultValueListFirst.get( i ) + resultValueListSecond.get( i ) ) / 2;
+
+                    PressureLevelResult pressureLevelResult = getPressureLevelResult( null, stationNameCode,
+                            dataOrder, result, calTransferPassageLevel( result ), PressureTypeEnum.TRANSFER_PASSAGE);
+
+                    pressureLevelResultList.add( pressureLevelResult );
+
+                }
+
+            }
+
+            // 删除原来的 暂时从简
+            savePressureResultData(null, stationNameCode,
+                    pressureLevelResultList, PressureTypeEnum.TRANSFER_PASSAGE);
+
+        }
+
+        return pressureLevelResultList;
 
     }
 

@@ -2,6 +2,7 @@ package hello.service;
 
 import hello.constant.PressureTypeEnum;
 import hello.entity.GateStatistics;
+import hello.entity.PressureLevelResult;
 import hello.entity.TransferPassageFlow;
 import hello.param.StationAddParam;
 
@@ -61,17 +62,6 @@ public interface PressureCalculateService {
                        String stationNameCode);
 
     /**
-     * 计算进闸
-     * @param lineCode
-     * @param avgArrIntTime 平均到达间隔时间
-     * @param avgSecTime 平均过检时间
-     * @param secQueueArea 安检入口排队区域面积
-     */
-//    List<Double> calGateImport( String lineCode, Double avgArrIntTime,
-//                       Double avgSecTime, Double secQueueArea,
-//                       List<GateStatistics> statisticsList );
-
-    /**
      * 计算进/出闸
      * @param code
      * @param fiveMinNums 每五分钟进/出站人数
@@ -81,22 +71,6 @@ public interface PressureCalculateService {
      */
     List<Double> calGateImportExport( String code, List<Integer> fiveMinNums,
                                 Integer secNum, Double avgSecTime );
-
-
-    /**
-     * 计算出闸
-     * @param lineCode
-     * @param exitGateNum 出站闸机数量
-     * @param gateWidth 每个闸机的宽度
-     * @param maxQueueLength 出站闸机后可供排队的长度
-     * @param avgPassExitGateTime 平均过闸时间
-     * @param avgArrIntTimeExp 平均到达间隔时间
-     */
-//    List<Double> calGateExport( String lineCode, Integer exitGateNum,
-//                        Double gateWidth, Double maxQueueLength,
-//                        Double avgPassExitGateTime, Double avgArrIntTimeExp,
-//                        List<GateStatistics> statisticsList);
-
 
     /**
      * 计算总的闸机结果
@@ -111,16 +85,25 @@ public interface PressureCalculateService {
 
     /**
      * 计算换乘通道
-     * @param lineCode
+     * @param fromLineCode 从哪条线换乘 目前只支持一个车站两条线路的车站， 两个以上的车站如人民广场暂不支持
      * @param passageLength 换乘通道长度
      * @param tCommon   通畅情况下通过通道所用的时间
      * @param b 计算用
      * @param n 计算用
      */
-    void calTransferPassage(String lineCode, Double passageLength,
+    void calTransferPassage(String fromLineCode, Double passageLength,
                             Double tCommon, Double b,
-                            Double n, List<TransferPassageFlow> transferPassageFlowList);
+                            Double n, List<TransferPassageFlow> transferPassageFlowList,
+                            String stationNameCode);
 
+    /**
+     * 计算车站总的换乘通道压力等级
+     * @param resultValueListFirst
+     * @param resultValueListSecond
+     * @param stationNameCode
+     */
+    List<PressureLevelResult> calAvgTransferPassage(List<Double> resultValueListFirst, List<Double> resultValueListSecond,
+                                                    String stationNameCode);
 
     /**
      * 出入口压力等级换算
@@ -134,7 +117,7 @@ public interface PressureCalculateService {
      * @param stationAddParam
      * @return
      */
-    void   calEntranceAll( StationAddParam stationAddParam );
+    void  calEntranceAll( StationAddParam stationAddParam );
 
     Map<String, Object> getEntranceResultMap();
 

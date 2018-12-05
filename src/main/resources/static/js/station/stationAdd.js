@@ -18,12 +18,12 @@ $(document).ready(function () {
     } );
 
     // 换乘通道数修改
-    $ ( 'input[name=passageNumber]' ).change( function () {
-
+    // $ ( 'input[name=passageNumber]:visible' ).change( function () {
+    $ ( 'input[name=passageNumber]' ).on( 'change', function () {
         console.log( 'passageNumber changed!' );
 
         var sumPassageNumber = 0
-        $.each( $ ( 'input[name=passageNumber]' ), function () {
+        $.each( $ ( 'input[name=passageNumber]:visible' ), function () {
             if ($(this).val() == '' )
                 $(this).val(0);
             sumPassageNumber += Number(  $(this).val() );
@@ -31,7 +31,7 @@ $(document).ready(function () {
 
         console.log( sumPassageNumber );
 
-        $( this ).siblings( 'input[name=passageLength]' ).remove();
+        $( this ).siblings( 'input[name=passageLength]:visible' ).remove();
 
         var currentPassageNumber = Number(  $(this).val() );
         for ( var i = 0; i < currentPassageNumber; i++ ) {
@@ -44,7 +44,7 @@ $(document).ready(function () {
 
         }
 
-        $( '#transferPassageDiv' ).find( '.transferPassageStatisticsClass' ).remove();
+        $( '.transferPassageDiv:visible' ).find( '.transferPassageStatisticsClass' ).remove();
 
 
 
@@ -176,122 +176,122 @@ $(document).ready(function () {
                 '                                                <tbody>\n' +
                 '                                                <tr id="tt50">\n' +
                 '                                                    <th scope="row">8:00-8:04</th>\n' +
-                '                                                    <td><input type="text" value="" name="flow" class="form-control"></td>\n' +
+                '                                                    <td><input type="text" value="500" name="flow" class="form-control"></td>\n' +
                 '\n' +
                 '                                                </tr>\n' +
                 '                                                <tr id="tt51">\n' +
                 '                                                    <th scope="row">8:05-8:09</th>\n' +
-                '                                                    <td><input type="text" value="" name="flow" class="form-control"></td>\n' +
+                '                                                    <td><input type="text" value="500" name="flow" class="form-control"></td>\n' +
                 '\n' +
                 '                                                </tr>\n' +
                 '                                                <tr id="tt52">\n' +
                 '                                                    <th scope="row">8:10-8:14</th>\n' +
-                '                                                    <td><input type="text" value="" name="flow" class="form-control"></td>\n' +
+                '                                                    <td><input type="text" value="500" name="flow" class="form-control"></td>\n' +
                 '\n' +
                 '                                                </tr>\n' +
                 '                                                <tr id="tt53">\n' +
                 '                                                    <th scope="row">8:15-8:19</th>\n' +
-                '                                                    <td><input type="text" value="" name="flow" class="form-control"></td>\n' +
+                '                                                    <td><input type="text" value="500" name="flow" class="form-control"></td>\n' +
                 '\n' +
                 '                                                </tr>\n' +
                 '                                                <tr id="tt54">\n' +
                 '                                                    <th scope="row">8:20-8:24</th>\n' +
-                '                                                    <td><input type="text" value="" name="flow" class="form-control"></td>\n' +
+                '                                                    <td><input type="text" value="500" name="flow" class="form-control"></td>\n' +
                 '\n' +
                 '                                                </tr>\n' +
                 '                                                <tr id="tt55">\n' +
                 '                                                    <th scope="row">8:25-8:29</th>\n' +
-                '                                                    <td><input type="text" value="" name="flow" class="form-control"></td>\n' +
+                '                                                    <td><input type="text" value="500" name="flow" class="form-control"></td>\n' +
                 '\n' +
                 '                                                </tr>\n' +
                 '                                                <tr id="tt56">\n' +
                 '                                                    <th scope="row">8:30-8:34</th>\n' +
-                '                                                    <td><input type="text" value=""  name="flow" class="form-control"></td>\n' +
+                '                                                    <td><input type="text" value="500"  name="flow" class="form-control"></td>\n' +
                 '\n' +
                 '                                                </tr>\n' +
                 '                                                <tr id="tt57">\n' +
                 '                                                    <th scope="row">8:35-8:39</th>\n' +
-                '                                                    <td><input type="text" value="" name="flow" class="form-control"></td>\n' +
+                '                                                    <td><input type="text" value="500" name="flow" class="form-control"></td>\n' +
                 '\n' +
                 '                                                </tr>\n' +
                 '                                                <tr id="tt58">\n' +
                 '                                                    <th scope="row">8:40-8:44</th>\n' +
-                '                                                    <td><input type="text" value="" name="flow" class="form-control"></td>\n' +
+                '                                                    <td><input type="text" value="500" name="flow" class="form-control"></td>\n' +
                 '\n' +
                 '                                                </tr>\n' +
                 '                                                <tr id="tt59">\n' +
                 '                                                    <th scope="row">8:45-8:49</th>\n' +
-                '                                                    <td><input type="text" value="" name="flow" class="form-control"></td>\n' +
+                '                                                    <td><input type="text" value="500" name="flow" class="form-control"></td>\n' +
                 '\n' +
                 '                                                </tr>\n' +
                 '                                                <tr id="tt60">\n' +
                 '                                                    <th scope="row">8:50-8:54</th>\n' +
-                '                                                    <td><input type="text" value="" name="flow" class="form-control"></td>\n' +
+                '                                                    <td><input type="text" value="500" name="flow" class="form-control"></td>\n' +
                 '\n' +
                 '                                                </tr>\n' +
                 '                                                <tr id="tt61">\n' +
                 '                                                    <th scope="row">8:55-8:59</th>\n' +
-                '                                                    <td><input type="text" value="" name="flow" class="form-control"></td>\n' +
+                '                                                    <td><input type="text" value="500" name="flow" class="form-control"></td>\n' +
                 '\n' +
                 '                                                </tr>\n' +
                 '                                                <tr id="tt62">\n' +
                 '                                                    <th scope="row">9:00-9:04</th>\n' +
-                '                                                    <td><input type="text" value="" name="flow" class="form-control"></td>\n' +
+                '                                                    <td><input type="text" value="500" name="flow" class="form-control"></td>\n' +
                 '\n' +
                 '                                                </tr>\n' +
                 '                                                <tr id="tt63">\n' +
                 '                                                    <th scope="row">9:05-9:09</th>\n' +
-                '                                                    <td><input type="text" value="" name="flow" class="form-control"></td>\n' +
+                '                                                    <td><input type="text" value="500" name="flow" class="form-control"></td>\n' +
                 '\n' +
                 '                                                </tr>\n' +
                 '                                                <tr id="tt64">\n' +
                 '                                                    <th scope="row">9:10-9:14</th>\n' +
-                '                                                    <td><input type="text" value="" name="flow" class="form-control"></td>\n' +
+                '                                                    <td><input type="text" value="500" name="flow" class="form-control"></td>\n' +
                 '\n' +
                 '                                                </tr>\n' +
                 '                                                <tr id="tt65">\n' +
                 '                                                    <th scope="row">9:15-9:19</th>\n' +
-                '                                                    <td><input type="text" value="" name="flow" class="form-control"></td>\n' +
+                '                                                    <td><input type="text" value="500" name="flow" class="form-control"></td>\n' +
                 '\n' +
                 '                                                </tr>\n' +
                 '                                                <tr id="tt66">\n' +
                 '                                                    <th scope="row">9:20-9:24</th>\n' +
-                '                                                    <td><input type="text" value="" name="flow" class="form-control"></td>\n' +
+                '                                                    <td><input type="text" value="500" name="flow" class="form-control"></td>\n' +
                 '\n' +
                 '                                                </tr>\n' +
                 '                                                <tr id="tt67">\n' +
                 '                                                    <th scope="row">9:25-9:29</th>\n' +
-                '                                                    <td><input type="text" value="" name="flow" class="form-control"></td>\n' +
+                '                                                    <td><input type="text" value="500" name="flow" class="form-control"></td>\n' +
                 '\n' +
                 '                                                </tr>\n' +
                 '                                                <tr id="tt68">\n' +
                 '                                                    <th scope="row">9:30-9:34</th>\n' +
-                '                                                    <td><input type="text" value="" name="flow" class="form-control"></td>\n' +
+                '                                                    <td><input type="text" value="500" name="flow" class="form-control"></td>\n' +
                 '\n' +
                 '                                                </tr>\n' +
                 '                                                <tr id="tt69">\n' +
                 '                                                    <th scope="row">9:35-9:39</th>\n' +
-                '                                                    <td><input type="text" value="" name="flow" class="form-control"></td>\n' +
+                '                                                    <td><input type="text" value="500" name="flow" class="form-control"></td>\n' +
                 '\n' +
                 '                                                </tr>\n' +
                 '                                                <tr id="tt70">\n' +
                 '                                                    <th scope="row">9:40-9:44</th>\n' +
-                '                                                    <td><input type="text" value="" name="flow" class="form-control"></td>\n' +
+                '                                                    <td><input type="text" value="500" name="flow" class="form-control"></td>\n' +
                 '\n' +
                 '                                                </tr>\n' +
                 '                                                <tr id="tt71">\n' +
                 '                                                    <th scope="row">9:45-9:49</th>\n' +
-                '                                                    <td><input type="text" value="" class="form-control"></td>\n' +
+                '                                                    <td><input type="text" value="500" name="flow" class="form-control"></td>\n' +
                 '\n' +
                 '                                                </tr>\n' +
                 '                                                <tr id="tt72">\n' +
                 '                                                    <th scope="row">9:50-9:54</th>\n' +
-                '                                                    <td><input type="text" value="" name="flow" class="form-control"></td>\n' +
+                '                                                    <td><input type="text" value="500" name="flow" class="form-control"></td>\n' +
                 '\n' +
                 '                                                </tr>\n' +
                 '                                                <tr id="tt73">\n' +
                 '                                                    <th scope="row">9:55-9:59</th>\n' +
-                '                                                    <td><input type="text" value="" name="flow" class="form-control"></td>\n' +
+                '                                                    <td><input type="text" value="500" name="flow" class="form-control"></td>\n' +
                 '\n' +
                 '                                                </tr>\n' +
                 '                                                </tbody>\n' +
@@ -299,7 +299,7 @@ $(document).ready(function () {
                 '                                        </div>\n' +
                 '                                    </div>' )
             ;
-            $( '#transferPassageDiv' ).append( traPassStaCom );
+            $( '.transferPassageDiv:visible' ).append( traPassStaCom );
         }
 
 
@@ -491,14 +491,14 @@ var getData = function () {
     // 换乘通道基本信息
     var transferPassageArr = [];
 
-    $.each( $( '#transferPassageBaseForm' ).find( 'input[name=passageLength]' ), function ( index, value ) {
+    $.each( $( '[name=transferPassageBaseForm]:visible' ).find( 'input[name=passageLength]' ), function ( index, value ) {
         var transferPassage = {};
         transferPassage.passageLength = $( this ).val();
 
         if ( checkAllObjectPropIsNotNull( transferPassage ) )
             transferPassageArr.push( transferPassage );
 
-    } )
+    } );
 
     // 换乘通道统计信息
 
@@ -506,11 +506,11 @@ var getData = function () {
     var transferPassageUsetimeListArr = [];
     // 通道人流量
     var transferPassageFlowListArr = [];
-    $.each( $( '.transferPassageStatisticsClass' ), function () {
+    $.each( $( '.transferPassageStatisticsClass:visible' ), function () {
 
         var transferPassageUsetimeList =[];
         var transferPassageFlowList = [];
-        $.each( $( this ).find( '.tongji' ), function ( index, value ) {
+        $.each( $( this ).find( '.tongji:visible' ), function ( index, value ) {
 
             if ( index == 0 )
                 $.each( $( this ) .find( 'tr:gt(1)' ), function ( index, value ) {

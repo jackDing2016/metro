@@ -77,19 +77,16 @@ $(document).ready(function () {
     } );
 
     $( '#transferPassageResBtn' ).click( function () {
-        window.location.href = '/pressureCalculation/toPressureCalculationResultPage/5' + percent;
+        window.location.href = '/pressureCalculation/toPressureCalculationResultPage/5' + param;
     } );
 
     $( '#resultNewBtn' ).click( function () {
-        window.location.href = '/pressureCalculation/toPressureAllTypeStatisticsPage' + param;
+        window.location.href = '/pressureCalculation/toPressureAllTypeStatisticsPage' + percent;
     } );
 
     $( '#resultImgsampleBtn' ).click( function () {
         window.location.href = '/pressureCalculation/toPressureImgtatisticsPage';
     } );
-
-
-
 
 
 });
