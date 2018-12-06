@@ -46,6 +46,8 @@ public class TrafficData extends Model<TrafficData> {
 
     private Integer timeIntervalType;
 
+    private Integer pressureTimeType;
+
 
     @Override
     protected Serializable pkVal() {

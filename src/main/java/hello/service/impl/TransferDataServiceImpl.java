@@ -1,6 +1,7 @@
 package hello.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import hello.constant.PressureTimeTypeEnum;
 import hello.constant.TransferTypeEnum;
 import hello.entity.TrafficData;
 import hello.entity.TransferData;
@@ -25,7 +26,8 @@ public class TransferDataServiceImpl extends ServiceImpl<TransferDataMapper, Tra
 
     @Override
     public List<Integer> getDataList(String lineCode, String stationName,
-                                               TransferTypeEnum transferTypeEnum) {
+                                               TransferTypeEnum transferTypeEnum,
+                                     PressureTimeTypeEnum pressureTimeTypeEnum) {
 
         TransferData transferDataQuery = new TransferData();
         transferDataQuery.setStationName( stationName );
@@ -34,6 +36,8 @@ public class TransferDataServiceImpl extends ServiceImpl<TransferDataMapper, Tra
             transferDataQuery.setToLineCode( lineCode );
         else if ( transferTypeEnum == TransferTypeEnum.TRANSFER_OUT )
             transferDataQuery.setFromLineCode( lineCode );
+
+        transferDataQuery.setPressureTimeType( pressureTimeTypeEnum.getCode() );
 
         QueryWrapper<TransferData> queryWrapper =
                 new QueryWrapper<>( transferDataQuery );

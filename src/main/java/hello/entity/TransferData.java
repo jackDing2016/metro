@@ -44,6 +44,8 @@ public class TransferData extends Model<TransferData> {
 
     private Integer dataOrder;
 
+    private Integer pressureTimeType;
+
 
     @Override
     protected Serializable pkVal() {

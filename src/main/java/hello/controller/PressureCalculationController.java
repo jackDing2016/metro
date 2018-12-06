@@ -1,6 +1,7 @@
 package hello.controller;
 
 import hello.constant.MetroConstant;
+import hello.constant.PressureTimeTypeEnum;
 import hello.constant.PressureTypeEnum;
 import hello.entity.PressureLevelResult;
 import hello.param.PressureCalculateParam;
@@ -75,34 +76,43 @@ public class PressureCalculationController {
         Map<String, Object> plateformResultMap =
             pressureCalculateService.calPressureLevelAvg( lineCodeFirst, lineCodeSecond,
                     Double.valueOf( per2Val ), Double.valueOf( per11Val ),
-                    pressureLevelResultService.getDataList( lineCodeFirst, stationNameCode, PressureTypeEnum.PLATEFORM ),
-                    pressureLevelResultService.getDataList( lineCodeSecond, stationNameCode, PressureTypeEnum.PLATEFORM ),
+                    pressureLevelResultService.getDataList( lineCodeFirst, stationNameCode, PressureTypeEnum.PLATEFORM ,
+                            PressureTimeTypeEnum.WEEKDAY),
+                    pressureLevelResultService.getDataList( lineCodeSecond, stationNameCode, PressureTypeEnum.PLATEFORM,
+                            PressureTimeTypeEnum.WEEKDAY),
                     PressureTypeEnum.PLATEFORM, stationNameCode);
 
         plateformResultMap.putAll( pressureLevelStatisticsService.calculateAvgLevelAndScore( lineCodeFirst, lineCodeSecond,
-                Double.valueOf( per2Val ), Double.valueOf( per11Val), stationNameCode, PressureTypeEnum.PLATEFORM) );
+                Double.valueOf( per2Val ), Double.valueOf( per11Val), stationNameCode, PressureTypeEnum.PLATEFORM,
+                PressureTimeTypeEnum.WEEKDAY) );
 
 
 
         Map<String, Object> escalatorResultMap =
                     pressureCalculateService.calPressureLevelAvg( lineCodeFirst, lineCodeSecond,
                     Double.valueOf( per2Val ), Double.valueOf( per11Val ),
-                    pressureLevelResultService.getDataList( lineCodeFirst, stationNameCode, PressureTypeEnum.Escalator  ),
-                    pressureLevelResultService.getDataList( lineCodeSecond, stationNameCode, PressureTypeEnum.Escalator  ),
+                    pressureLevelResultService.getDataList( lineCodeFirst, stationNameCode, PressureTypeEnum.Escalator,
+                            PressureTimeTypeEnum.WEEKDAY  ),
+                    pressureLevelResultService.getDataList( lineCodeSecond, stationNameCode, PressureTypeEnum.Escalator,
+                            PressureTimeTypeEnum.WEEKDAY),
                     PressureTypeEnum.Escalator, stationNameCode );
 
         escalatorResultMap.putAll( pressureLevelStatisticsService.calculateAvgLevelAndScore( lineCodeFirst, lineCodeSecond,
-                Double.valueOf( per2Val ), Double.valueOf( per11Val), stationNameCode, PressureTypeEnum.Escalator ) );
+                Double.valueOf( per2Val ), Double.valueOf( per11Val), stationNameCode, PressureTypeEnum.Escalator ,
+                PressureTimeTypeEnum.WEEKDAY) );
 
         Map<String, Object> gateResultMap =
                     pressureCalculateService.calPressureLevelAvg( lineCodeFirst, lineCodeSecond,
                     Double.valueOf( per2Val ), Double.valueOf( per11Val ),
-                    pressureLevelResultService.getDataList( lineCodeFirst, stationNameCode, PressureTypeEnum.GATE  ),
-                    pressureLevelResultService.getDataList( lineCodeSecond, stationNameCode, PressureTypeEnum.GATE  ),
+                    pressureLevelResultService.getDataList( lineCodeFirst, stationNameCode, PressureTypeEnum.GATE,
+                            PressureTimeTypeEnum.WEEKDAY),
+                    pressureLevelResultService.getDataList( lineCodeSecond, stationNameCode, PressureTypeEnum.GATE ,
+                            PressureTimeTypeEnum.WEEKDAY),
                     PressureTypeEnum.GATE, stationNameCode );
 
         gateResultMap.putAll( pressureLevelStatisticsService.calculateAvgLevelAndScore( lineCodeFirst, lineCodeSecond,
-                Double.valueOf( per2Val ), Double.valueOf( per11Val), stationNameCode, PressureTypeEnum.GATE ) );
+                Double.valueOf( per2Val ), Double.valueOf( per11Val), stationNameCode, PressureTypeEnum.GATE ,
+                PressureTimeTypeEnum.WEEKDAY) );
 
 
 
@@ -177,27 +187,6 @@ public class PressureCalculationController {
 
                 model.addAttribute( "lineWeightMap", lineWeightMap );
 
-
-                Map<String, String> resultMap = null;
-
-                if ( lineCodeArr.length == 2 ) {
-
-                    // 计算加权平均值
-                    resultMap =
-                        pressureLevelStatisticsService.calculateAvgLevelAndScore( lineCodeArr[0], lineCodeArr[1],
-                                Double.valueOf( per2Val ), Double.valueOf( per11Val ),
-                                stationNameCode, pressureTypeEnum);
-                }
-                else {
-                    resultMap =
-                            pressureLevelStatisticsService.calculateAvgLevelAndScore( lineCodeArr[0], null,
-                                    Double.valueOf( per2Val ), null,
-                                    stationNameCode, pressureTypeEnum);
-                }
-
-                model.addAttribute( "avgLevel", resultMap.get( "avgLevel") );
-                model.addAttribute( "avgScore", resultMap.get( "avgScore") );
-
             }
 
         }
@@ -217,18 +206,44 @@ public class PressureCalculationController {
     public @ResponseBody Map<String, Object> calculateResult(
             @PathVariable( name = "pressureType") Integer pressureType,
             @RequestParam( required = true) String lineCodeStr,
-            @RequestParam( required = true ) String stationNameCode
+            @RequestParam( required = true ) String stationNameCode,
+            @RequestParam( required = false ) String per2Val,
+            @RequestParam( required = false ) String per11Val,
+            @RequestParam( required = true ) Integer pressureTimeType
             ) {
 
-        Map<String, Object> resultMap = null;
+        Map<String, Object> dataResultMap = null;
 
         String[] lineCodeArr = lineCodeStr.split( "," );
+
+        PressureTimeTypeEnum pressureTimeTypeEnum = PressureTimeTypeEnum.getByCode( pressureTimeType );
 
         PressureTypeEnum pressureTypeEnum =
                 PressureTypeEnum.getByCode( pressureType );
 
-        resultMap = pressureLevelResultService.getDataLevelListMap( lineCodeArr,
-                stationNameCode, pressureTypeEnum);
+        dataResultMap = pressureLevelResultService.getDataLevelListMap( lineCodeArr,
+                stationNameCode, pressureTypeEnum, pressureTimeTypeEnum);
+
+        Map<String, String> avgScoreLevelMap = null;
+
+        if ( lineCodeArr.length == 2 ) {
+
+            // 计算加权平均值
+            avgScoreLevelMap =
+                    pressureLevelStatisticsService.calculateAvgLevelAndScore( lineCodeArr[0], lineCodeArr[1],
+                            Double.valueOf( per2Val ), Double.valueOf( per11Val ),
+                            stationNameCode, pressureTypeEnum, pressureTimeTypeEnum);
+        }
+        else {
+            avgScoreLevelMap =
+                    pressureLevelStatisticsService.calculateAvgLevelAndScore( lineCodeArr[0], null,
+                            Double.valueOf( per2Val ), null,
+                            stationNameCode, pressureTypeEnum, pressureTimeTypeEnum);
+        }
+
+        Map<String, Object> resultMap = new HashMap<>();
+        resultMap.put( "dataResultMap", dataResultMap );
+        resultMap.put( "avgScoreLevelMap", avgScoreLevelMap );
 
         return  resultMap;
 
@@ -240,15 +255,13 @@ public class PressureCalculationController {
             @RequestParam( required = true ) String stationNameCode
     ) {
 
-        Map<String, Object> resultMap = null;
-
         String[] lineCodeArr = lineCodeStr.split( "," );
 
         List<Double> dataListFirst = pressureLevelResultService.getDataList( lineCodeArr[0],
-                stationNameCode, PressureTypeEnum.TRANSFER_PASSAGE  );
+                stationNameCode, PressureTypeEnum.TRANSFER_PASSAGE , PressureTimeTypeEnum.WEEKDAY );
 
         List<Double> dataListSecond = pressureLevelResultService.getDataList( lineCodeArr[1],
-                stationNameCode, PressureTypeEnum.TRANSFER_PASSAGE);
+                stationNameCode, PressureTypeEnum.TRANSFER_PASSAGE, PressureTimeTypeEnum.WEEKDAY);
 
         List<PressureLevelResult> pressureLevelResultList =
             pressureCalculateService.calAvgTransferPassage( dataListFirst, dataListSecond, stationNameCode );

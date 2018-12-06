@@ -1,5 +1,6 @@
 package hello.service;
 
+import hello.constant.PressureTimeTypeEnum;
 import hello.constant.TimeIntervalTypeEnum;
 import hello.constant.TrafficTypeEnum;
 import hello.constant.TransferTypeEnum;
@@ -24,7 +25,7 @@ public interface TransferDataService extends IService<TransferData> {
      * @param stationName
      * @return
      */
-    List<Integer> getDataList(String lineCode, String stationName,
-                                        TransferTypeEnum transferTypeEnum);
+    List<Integer> getDataList(String lineCode, String stationName, TransferTypeEnum transferTypeEnum,
+                              PressureTimeTypeEnum pressureTimeTypeEnum);
 
 }

@@ -1,5 +1,6 @@
 package hello.service;
 
+import hello.constant.PressureTimeTypeEnum;
 import hello.constant.TimeIntervalTypeEnum;
 import hello.constant.TrafficTypeEnum;
 import hello.entity.TrafficData;
@@ -28,6 +29,7 @@ public interface TrafficDataService extends IService<TrafficData> {
      * @return
      */
     List<Integer> getDataList(TrafficTypeEnum trafficTypeEnum, TimeIntervalTypeEnum timeIntervalTypeEnum,
-                              Integer startOrder, Integer endOrder, String lineCode, String stationName);
+                              Integer startOrder, Integer endOrder, String lineCode, String stationName,
+                              PressureTimeTypeEnum pressureTimeTypeEnum );
 
 }

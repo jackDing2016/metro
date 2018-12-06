@@ -2,6 +2,7 @@ package hello.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import hello.constant.MetroConstant;
+import hello.constant.PressureTimeTypeEnum;
 import hello.constant.PressureTypeEnum;
 import hello.entity.PressureLevelResult;
 import hello.dao.PressureLevelResultMapper;
@@ -29,10 +30,10 @@ public class PressureLevelResultServiceImpl extends ServiceImpl<PressureLevelRes
 
     @Override
     public List<Double> getDataList(String lineCode, String stationNameCode,
-                                    PressureTypeEnum pressureTypeEnum) {
+                                    PressureTypeEnum pressureTypeEnum, PressureTimeTypeEnum pressureTimeTypeEnum ) {
 
         List<PressureLevelResult> pressureLevelResultList =
-                getPressureLevelResults(lineCode, stationNameCode, pressureTypeEnum);
+                getPressureLevelResults(lineCode, stationNameCode, pressureTypeEnum, pressureTimeTypeEnum);
 
         List<Double> dataList = new ArrayList<>();
 
@@ -47,9 +48,9 @@ public class PressureLevelResultServiceImpl extends ServiceImpl<PressureLevelRes
 
     @Override
     public List<String> getDataLevelList(String lineCode, String stationNameCode,
-                                         PressureTypeEnum pressureTypeEnum) {
+                                         PressureTypeEnum pressureTypeEnum, PressureTimeTypeEnum pressureTimeTypeEnum) {
         List<PressureLevelResult> pressureLevelResultList =
-                getPressureLevelResults(lineCode, stationNameCode, pressureTypeEnum);
+                getPressureLevelResults(lineCode, stationNameCode, pressureTypeEnum, pressureTimeTypeEnum);
 
         List<String> dataList = new ArrayList<>();
 
@@ -62,12 +63,14 @@ public class PressureLevelResultServiceImpl extends ServiceImpl<PressureLevelRes
         return dataList;
     }
 
-    private List<PressureLevelResult> getPressureLevelResults(String lineCode, String stationNameCode, PressureTypeEnum pressureTypeEnum) {
+    private List<PressureLevelResult> getPressureLevelResults(String lineCode, String stationNameCode,
+                                                              PressureTypeEnum pressureTypeEnum, PressureTimeTypeEnum pressureTimeTypeEnum) {
         PressureLevelResult pressureLevelResultQuery =
                 new PressureLevelResult();
         pressureLevelResultQuery.setLineCode( lineCode );
         pressureLevelResultQuery.setStationName( stationNameCode );
         pressureLevelResultQuery.setPressureType( pressureTypeEnum.getCode() );
+        pressureLevelResultQuery.setPressureTimeType( pressureTimeTypeEnum.getCode() );
 
         QueryWrapper<PressureLevelResult> queryWrapper =
                 new QueryWrapper<>( pressureLevelResultQuery );
@@ -79,14 +82,15 @@ public class PressureLevelResultServiceImpl extends ServiceImpl<PressureLevelRes
 
     @Override
     public Map<String, Object> getDataListMap(String[] lineCodeArr,
-                                              String stationNameCode, PressureTypeEnum pressureTypeEnum) {
+                                              String stationNameCode, PressureTypeEnum pressureTypeEnum,
+                                              PressureTimeTypeEnum pressureTimeTypeEnum) {
 
         Map<String, Object> dataMap = new HashedMap();
 
         for ( int i = 0; i < lineCodeArr.length; i++ ) {
 
             dataMap.put(MetroConstant.PREFFIX_LINE + lineCodeArr[ i ] + MetroConstant.SUFFIX_LINE,
-                    getDataList( lineCodeArr[ i ], stationNameCode,  pressureTypeEnum));
+                    getDataList( lineCodeArr[ i ], stationNameCode,  pressureTypeEnum, pressureTimeTypeEnum ));
 
         }
 
@@ -95,16 +99,28 @@ public class PressureLevelResultServiceImpl extends ServiceImpl<PressureLevelRes
 
     @Override
     public Map<String, Object> getDataLevelListMap(String[] lineCodeArr, String stationNameCode,
-                                                   PressureTypeEnum pressureTypeEnum) {
+                                                   PressureTypeEnum pressureTypeEnum, PressureTimeTypeEnum pressureTimeTypeEnum) {
 
         Map<String, Object> dataMap = new HashedMap();
 
         for ( int i = 0; i < lineCodeArr.length; i++ ) {
 
             dataMap.put(MetroConstant.PREFFIX_LINE + lineCodeArr[ i ],
-                    getDataLevelList( lineCodeArr[ i ], stationNameCode,  pressureTypeEnum));
+                    getDataLevelList( lineCodeArr[ i ], stationNameCode,  pressureTypeEnum, pressureTimeTypeEnum));
 
         }
+
+        // just for test
+//        String[] resultArr = null;
+//        if ( pressureTimeTypeEnum == PressureTimeTypeEnum.WEEKDAY ) {
+//            resultArr = new String[]{"C", "B", "A", "C", "D", "A", "D", "C" };
+//        }
+//        else {
+//            resultArr = new String[]{"D", "B", "B", "B", "B", "C", "E", "A" };
+//        }
+//        dataMap.put(MetroConstant.PREFFIX_LINE + "8", resultArr);
+
+
 
         return dataMap;
     }

@@ -1,5 +1,6 @@
 package hello.service.impl;
 
+import hello.constant.PressureTimeTypeEnum;
 import hello.constant.PressureTypeEnum;
 import hello.service.PressureCalculateService;
 import hello.service.PressureLevelResultService;
@@ -24,15 +25,15 @@ public class PressureLevelStatisticsServiceImpl implements PressureLevelStatisti
     @Override
     public Map<String, String> calculateAvgLevelAndScore(String lineCodeOne, String lineCodeTwo,
                                                          Double weightOne, Double weightTwo, String stationNameCode,
-                                                         PressureTypeEnum pressureTypeEnum) {
+                                                         PressureTypeEnum pressureTypeEnum, PressureTimeTypeEnum pressureTimeTypeEnum) {
 
         List<Double> dataList1 =
                 pressureLevelResultService.getDataList( lineCodeOne, stationNameCode,
-                        pressureTypeEnum);
+                        pressureTypeEnum, pressureTimeTypeEnum );
 
         List<Double> dataList2 =
                 pressureLevelResultService.getDataList( lineCodeTwo, stationNameCode,
-                        pressureTypeEnum);
+                        pressureTypeEnum, pressureTimeTypeEnum );
 
         Double sum = 0.0;
         for ( Double douVal : dataList1) {

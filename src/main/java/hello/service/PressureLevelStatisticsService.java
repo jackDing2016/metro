@@ -1,5 +1,6 @@
 package hello.service;
 
+import hello.constant.PressureTimeTypeEnum;
 import hello.constant.PressureTypeEnum;
 
 import java.util.Map;
@@ -17,7 +18,8 @@ public interface PressureLevelStatisticsService {
      */
     Map<String, String> calculateAvgLevelAndScore(String lineCodeOne, String lineCodeTwo,
             Double weightOne, Double weightTwo,
-            String stationNameCode,  PressureTypeEnum pressureTypeEnum);
+            String stationNameCode,  PressureTypeEnum pressureTypeEnum,
+                                                  PressureTimeTypeEnum pressureTimeTypeEnum);
 
 
 

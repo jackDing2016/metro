@@ -44,6 +44,8 @@ public class PressureLevelResult extends Model<PressureLevelResult> {
 
     private Integer dataOrder;
 
+    private Integer pressureTimeType;
+
 
     @Override
     protected Serializable pkVal() {

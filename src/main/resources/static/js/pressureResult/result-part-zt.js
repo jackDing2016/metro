@@ -1,19 +1,57 @@
 $(document).ready(function () {
 
+    getData( 1 );
+
+    $( '#weekdayBtn' ).click( function () {
+        getData( 1 );
+
+        $( this ).addClass( 'active' );
+        $( '#holidayBtn' ).removeClass( 'active' );
+
+    } );
+
+    $( '#holidayBtn' ).click( function () {
+        getData( 2 );
+
+        $( this ).addClass( 'active' );
+        $( '#weekdayBtn' ).removeClass( 'active' );
+
+    } );
+
+});
+
+var getData = function ( pressureTimeType ) {
+
+    var weightArr = [];
+    $.each( $( '#weightTable > tbody' ).find( 'tr' ), function () {
+        weightArr.push( $( this ).find( 'td:eq(1)' ).text() );
+    } );
+
+    var per2Val , per11Val = ''
+
+    per2Val = weightArr[ 0 ];
+    if ( weightArr.length > 1 )
+        per11Val = weightArr[ 1 ];
+
     $.ajax({
         type: 'get',
         url: '/pressureCalculation/calculateResult/' + $( '#pressureTypeCode' ).val(),
         dataType : 'json',
         data: {
             lineCodeStr : $( '#lineCodeStr' ).val(),
-            stationNameCode : $( '#stationNameCode' ).val()
+            stationNameCode : $( '#stationNameCode' ).val(),
+            per2Val : per2Val,
+            per11Val : per11Val,
+            pressureTimeType : pressureTimeType
         },
         contentType: "application/json; charset=utf-8",
-        success: function (data) {
+        success: function ( data ) {
 
+            // $( '#main' ).empty();
+
+            // chart show begin
             // 基于准备好的dom，初始化echarts实例
             var myChart = echarts.init(document.getElementById('main'));
-
             // 指定图表的配置项和数据
             var option = {
                 xAxis: {
@@ -61,17 +99,18 @@ $(document).ready(function () {
                 }
 
             };
-            
             var optionLegendData = [];
             var optionSeries = [];
-            for ( var key in data ) {
+
+            var dataResultMap = data.dataResultMap;
+            for ( var key in dataResultMap ) {
                 console.log( 'key is '  );
                 console.log( key);
                 var dataTitle = key.substring( key.indexOf( 'e' ) + 1, key.length )+ '号线（工作日）' ;
                 optionLegendData.push( dataTitle );
 
                 var seriesData = {};
-                seriesData.data = data[ key ];
+                seriesData.data = dataResultMap[ key ];
                 seriesData.type = 'line';
                 seriesData.name = dataTitle;
                 seriesData.areaStyle = {};
@@ -87,12 +126,17 @@ $(document).ready(function () {
             }
             option.legend.data = optionLegendData;
             option.series = optionSeries;
-
             // 使用刚指定的配置项和数据显示图表。
             myChart.setOption(option);
+            // chart show end
+
+            // avg score and level show begin
+            $( '#avgScore' ).text( data.avgScoreLevelMap.avgScore );
+            $( '#avgLevel' ).text( data.avgScoreLevelMap.avgLevel );
+            // avg score and level show end
+
+
         }
     });
 
-
-
-});
+}

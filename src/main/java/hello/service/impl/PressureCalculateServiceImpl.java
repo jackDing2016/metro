@@ -1,10 +1,7 @@
 package hello.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import hello.constant.MetroConstant;
-import hello.constant.PressureTypeEnum;
-import hello.constant.TimeIntervalTypeEnum;
-import hello.constant.TrafficTypeEnum;
+import hello.constant.*;
 import hello.entity.*;
 import hello.param.StationAddParam;
 import hello.service.PressureCalculateService;
@@ -50,7 +47,8 @@ public class PressureCalculateServiceImpl implements PressureCalculateService {
     public void calPlateform(String lineCode, Double plateformArea,
                              List<Integer> importNumber, List<Integer> transferIntoNumber,
                              List<Integer> exportNumber, List<Integer> transferOutNumber,
-                             String stationNameCode, Double headWay) {
+                             String stationNameCode, Double headWay,
+                             PressureTimeTypeEnum pressureTimeTypeEnum) {
 
         List<String> resultList = new ArrayList<>();
         // 用于计算加权平均值
@@ -76,7 +74,8 @@ public class PressureCalculateServiceImpl implements PressureCalculateService {
 
             PressureLevelResult pressureLevelResult =
                     getPressureLevelResult(lineCode, stationNameCode, i, pMax,
-                            calPlateformLevel( pMax ), PressureTypeEnum.PLATEFORM);
+                            calPlateformLevel( pMax ), PressureTypeEnum.PLATEFORM,
+                            pressureTimeTypeEnum );
 
             pressureLevelResultList.add( pressureLevelResult );
 
@@ -88,12 +87,14 @@ public class PressureCalculateServiceImpl implements PressureCalculateService {
 //        plateformMap.put(  "line" + lineCode + "Val", resultValList );
 
         // 删除原来的 暂时从简
-        savePressureResultData(lineCode, stationNameCode, pressureLevelResultList, PressureTypeEnum.PLATEFORM);
+        savePressureResultData(lineCode, stationNameCode, pressureLevelResultList,
+                PressureTypeEnum.PLATEFORM, pressureTimeTypeEnum);
 
     }
 
     private PressureLevelResult getPressureLevelResult(String lineCode, String stationNameCode,
-                                                       int i, double pMax, String resultLevel, PressureTypeEnum pressureTypeEnum) {
+                                                       int i, double pMax, String resultLevel, PressureTypeEnum pressureTypeEnum,
+                                                       PressureTimeTypeEnum pressureTimeTypeEnum) {
         PressureLevelResult pressureLevelResult = new PressureLevelResult();
         pressureLevelResult.setDataOrder( i );
         pressureLevelResult.setLineCode( lineCode );
@@ -101,16 +102,19 @@ public class PressureCalculateServiceImpl implements PressureCalculateService {
         pressureLevelResult.setPressureType( pressureTypeEnum.getCode() );
         pressureLevelResult.setResultValue( pMax );
         pressureLevelResult.setResultLevel( resultLevel );
+        pressureLevelResult.setPressureTimeType( pressureTimeTypeEnum.getCode() );
         return pressureLevelResult;
     }
 
     private void savePressureResultData(String lineCode, String stationNameCode,
-                                        List<PressureLevelResult> pressureLevelResultList, PressureTypeEnum pressureTypeEnum) {
+                                        List<PressureLevelResult> pressureLevelResultList, PressureTypeEnum pressureTypeEnum,
+                                        PressureTimeTypeEnum pressureTimeTypeEnum) {
         PressureLevelResult pressureLevelResultQuery =
                 new PressureLevelResult();
         pressureLevelResultQuery.setLineCode( lineCode );
         pressureLevelResultQuery.setStationName( stationNameCode );
         pressureLevelResultQuery.setPressureType( pressureTypeEnum.getCode() );
+        pressureLevelResultQuery.setPressureTimeType( pressureTimeTypeEnum.getCode() );
         QueryWrapper<PressureLevelResult> queryWrapper =
                 new QueryWrapper<>(pressureLevelResultQuery);
         pressureLevelResultService.remove( queryWrapper );
@@ -251,7 +255,7 @@ public class PressureCalculateServiceImpl implements PressureCalculateService {
 
             List<Integer> referenceDataList =
                 trafficDataService.getDataList( TrafficTypeEnum.IMPORT, TimeIntervalTypeEnum.FIVE_MINUTE ,
-                       3, 26,  lineCode, stationNameCode );
+                       3, 26,  lineCode, stationNameCode, PressureTimeTypeEnum.WEEKDAY );
 
             // reference data
             // String referenceData = "758,723,866,913,926,914,789,854,833,720,643,692,748,702,572,387,806,932,1042,953,1070,945,610,606";
@@ -281,13 +285,14 @@ public class PressureCalculateServiceImpl implements PressureCalculateService {
             if ( i % 3 == 0 ) {
                 System.out.println( "balabalaba"+ i );
                 PressureLevelResult pressureLevelResult = getPressureLevelResult(lineCode, stationNameCode,
-                        i, avgResultVal, calLevel( avgResultVal ), PressureTypeEnum.ENTRANCE);
+                        i, avgResultVal, calLevel( avgResultVal ), PressureTypeEnum.ENTRANCE, PressureTimeTypeEnum.WEEKDAY);
                 pressureLevelResultList.add( pressureLevelResult );
             }
         }
 
         // 删除原来的 暂时从简
-        savePressureResultData(lineCode, stationNameCode, pressureLevelResultList, PressureTypeEnum.ENTRANCE);
+        savePressureResultData(lineCode, stationNameCode,
+                pressureLevelResultList, PressureTypeEnum.ENTRANCE, PressureTimeTypeEnum.WEEKDAY);
 
     }
 
@@ -296,7 +301,7 @@ public class PressureCalculateServiceImpl implements PressureCalculateService {
                              List<Integer> exportNumber, List<Integer> transferOutNumber,
                              Double walkSpeed, Double plateformLength,
                              Double upEscalatorWidth, Double floorWidth,
-                             String stationNameCode) {
+                             String stationNameCode, PressureTimeTypeEnum pressureTimeTypeEnum) {
 
 
 //        List<String> resultList = new ArrayList<>();
@@ -345,7 +350,8 @@ public class PressureCalculateServiceImpl implements PressureCalculateService {
 
 
             PressureLevelResult pressureLevelResult = getPressureLevelResult(lineCode, stationNameCode,
-                    i, result, calEscalatorLevel( result ), PressureTypeEnum.Escalator);
+                    i, result, calEscalatorLevel( result ), PressureTypeEnum.Escalator,
+                    pressureTimeTypeEnum);
 
             pressureLevelResultList.add( pressureLevelResult );
 
@@ -354,7 +360,8 @@ public class PressureCalculateServiceImpl implements PressureCalculateService {
 //        escalatorMap.put( "line" + lineCode, resultList );
 
         // 删除原来的 暂时从简
-        savePressureResultData(lineCode, stationNameCode, pressureLevelResultList, PressureTypeEnum.Escalator);
+        savePressureResultData(lineCode, stationNameCode,
+                pressureLevelResultList, PressureTypeEnum.Escalator, pressureTimeTypeEnum);
 
     }
 
@@ -371,7 +378,9 @@ public class PressureCalculateServiceImpl implements PressureCalculateService {
 
 
     @Override
-    public List<Double> calGateImportExport(String code, List<Integer> fiveMinNums, Integer secNum, Double avgSecTime) {
+    public List<Double> calGateImportExport(String code, List<Integer> fiveMinNums,
+                                            Integer secNum, Double avgSecTime,
+                                            PressureTimeTypeEnum pressureTimeTypeEnum ) {
         List<String> resultList = new ArrayList<>();
         // 用于计算加权平均值
         List<Double> resultValList = new ArrayList<>();
@@ -423,7 +432,8 @@ public class PressureCalculateServiceImpl implements PressureCalculateService {
     @Override
     public void calGate(String lineCode, List<Double> gateImportResultList,
                         List<Double> gateExportResultList,Double weitghEntrance,
-                        Double weightExit, String stationNameCode) {
+                        Double weightExit, String stationNameCode,
+                        PressureTimeTypeEnum pressureTimeTypeEnum) {
 
 
 //        // 存等级
@@ -454,7 +464,7 @@ public class PressureCalculateServiceImpl implements PressureCalculateService {
 //                    resultValList.add( resultMax );
 
                     PressureLevelResult pressureLevelResult = getPressureLevelResult(lineCode, stationNameCode,
-                            dataOrder, resultMax, calGateLevel( resultMax ), PressureTypeEnum.GATE);
+                            dataOrder, resultMax, calGateLevel( resultMax ), PressureTypeEnum.GATE, pressureTimeTypeEnum);
                     dataOrder++;
                     pressureLevelResultList.add( pressureLevelResult );
 
@@ -473,7 +483,8 @@ public class PressureCalculateServiceImpl implements PressureCalculateService {
 //        gateMap.put( "line" + lineCode + "Val", resultValList );
 
         // 删除原来的 暂时从简
-        savePressureResultData(lineCode, stationNameCode, pressureLevelResultList, PressureTypeEnum.GATE);
+        savePressureResultData(lineCode, stationNameCode,
+                pressureLevelResultList, PressureTypeEnum.GATE, pressureTimeTypeEnum);
 
 
     }
@@ -494,7 +505,8 @@ public class PressureCalculateServiceImpl implements PressureCalculateService {
             result = passageLength / result;
 
             PressureLevelResult pressureLevelResult = getPressureLevelResult(lineCode, stationNameCode,
-                    dataOrder, result, calTransferPassageLevel( result ), PressureTypeEnum.TRANSFER_PASSAGE);
+                    dataOrder, result, calTransferPassageLevel( result ), PressureTypeEnum.TRANSFER_PASSAGE,
+                    PressureTimeTypeEnum.WEEKDAY);
 
             pressureLevelResultList.add( pressureLevelResult );
 
@@ -503,7 +515,8 @@ public class PressureCalculateServiceImpl implements PressureCalculateService {
         }
 
         // 删除原来的 暂时从简
-        savePressureResultData(lineCode, stationNameCode, pressureLevelResultList, PressureTypeEnum.TRANSFER_PASSAGE);
+        savePressureResultData(lineCode, stationNameCode,
+                pressureLevelResultList, PressureTypeEnum.TRANSFER_PASSAGE, PressureTimeTypeEnum.WEEKDAY);
 
     }
 
@@ -523,7 +536,8 @@ public class PressureCalculateServiceImpl implements PressureCalculateService {
                     Double result = ( resultValueListFirst.get( i ) + resultValueListSecond.get( i ) ) / 2;
 
                     PressureLevelResult pressureLevelResult = getPressureLevelResult( null, stationNameCode,
-                            dataOrder, result, calTransferPassageLevel( result ), PressureTypeEnum.TRANSFER_PASSAGE);
+                            dataOrder, result, calTransferPassageLevel( result ), PressureTypeEnum.TRANSFER_PASSAGE,
+                            PressureTimeTypeEnum.WEEKDAY);
 
                     pressureLevelResultList.add( pressureLevelResult );
 
@@ -533,7 +547,7 @@ public class PressureCalculateServiceImpl implements PressureCalculateService {
 
             // 删除原来的 暂时从简
             savePressureResultData(null, stationNameCode,
-                    pressureLevelResultList, PressureTypeEnum.TRANSFER_PASSAGE);
+                    pressureLevelResultList, PressureTypeEnum.TRANSFER_PASSAGE, PressureTimeTypeEnum.WEEKDAY);
 
         }
 

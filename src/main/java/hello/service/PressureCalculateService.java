@@ -1,5 +1,6 @@
 package hello.service;
 
+import hello.constant.PressureTimeTypeEnum;
 import hello.constant.PressureTypeEnum;
 import hello.entity.GateStatistics;
 import hello.entity.PressureLevelResult;
@@ -27,7 +28,8 @@ public interface PressureCalculateService {
     void calPlateform(String lineCode, Double plateformArea,
                       List<Integer> importNumber, List<Integer> transferIntoNumber,
                       List<Integer> exportNumber, List<Integer> transferOutNumber,
-                      String stationNameCode, Double headWay);
+                      String stationNameCode, Double headWay,
+                      PressureTimeTypeEnum pressureTimeTypeEnum);
 
     /**
      * 计算压力等级的平均值
@@ -59,7 +61,8 @@ public interface PressureCalculateService {
                        List<Integer> exportNumber, List<Integer> transferOutNumber,
                        Double walkSpeed, Double plateformLength,
                        Double upEscalatorWidth, Double floorWidth,
-                       String stationNameCode);
+                       String stationNameCode,
+                       PressureTimeTypeEnum pressureTimeTypeEnum );
 
     /**
      * 计算进/出闸
@@ -70,7 +73,8 @@ public interface PressureCalculateService {
      * @return
      */
     List<Double> calGateImportExport( String code, List<Integer> fiveMinNums,
-                                Integer secNum, Double avgSecTime );
+                                Integer secNum, Double avgSecTime,
+                                      PressureTimeTypeEnum pressureTimeTypeEnum);
 
     /**
      * 计算总的闸机结果
@@ -80,7 +84,8 @@ public interface PressureCalculateService {
      * @param weightExit
      */
     void calGate( String lineCode, List<Double> gateImportResultList, List<Double> gateExportResultList,
-                  Double weitghEntrance, Double weightExit, String stationNameCode);
+                  Double weitghEntrance, Double weightExit, String stationNameCode,
+                  PressureTimeTypeEnum pressureTimeTypeEnum);
 
 
     /**
