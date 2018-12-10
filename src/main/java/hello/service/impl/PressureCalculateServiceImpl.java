@@ -144,6 +144,7 @@ public class PressureCalculateServiceImpl implements PressureCalculateService {
     @Override
     public String calEscalatorLevel( Double data ) {
         String res = null;
+
         if ( data > 0 )
             res = "E";
         else if ( data > 0 && data <= 450 )

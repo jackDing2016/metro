@@ -81,7 +81,7 @@ $(document).ready(function () {
     } );
 
     $( '#resultNewBtn' ).click( function () {
-        window.location.href = '/pressureCalculation/toPressureAllTypeStatisticsPage' + percent;
+        window.location.href = '/pressureCalculation/toPressureAllTypeStatisticsPage' + param;
     } );
 
     $( '#resultImgsampleBtn' ).click( function () {

@@ -44,7 +44,9 @@ $(document).ready(function () {
                 itemStyle: {normal: {areaStyle: {type: 'default'}}},
                 data: [
                     {
-                        value: [ $( "#plateformAvgScore" ).text() ,$( "#escalatorAvgScore" ).text(), $( "#gateAvgScore" ).text(),100,100],
+                        value: [ $( "#plateformAvgScore" ).text() ,$( "#escalatorAvgScore" ).text(),
+                            $( "#gateAvgScore" ).text(), $( "#transferPassageAvgScore" ).text(),
+                            $( "#entranceAvgScore" ).text() ]
                     }
                 ]
             },

@@ -114,13 +114,61 @@ public class PressureCalculationController {
                 Double.valueOf( per2Val ), Double.valueOf( per11Val), stationNameCode, PressureTypeEnum.GATE ,
                 PressureTimeTypeEnum.WEEKDAY) );
 
+        // 换乘通道 start
+        List<Double> dataListFirst = pressureLevelResultService.getDataList( lineCodeArr[0],
+                stationNameCode, PressureTypeEnum.TRANSFER_PASSAGE , PressureTimeTypeEnum.WEEKDAY );
+        List<Double> dataListSecond = pressureLevelResultService.getDataList( lineCodeArr[1],
+                stationNameCode, PressureTypeEnum.TRANSFER_PASSAGE, PressureTimeTypeEnum.WEEKDAY);
+        List<PressureLevelResult> pressureLevelResultList =
+                pressureCalculateService.calAvgTransferPassage( dataListFirst, dataListSecond, stationNameCode );
+        List<String> resultLevelList = new ArrayList<>( pressureLevelResultList.size() );
+
+        Double transferPassageAvgScore = 0.0;
+        String transferPassageAvgLevel = "";
+
+        for ( PressureLevelResult pressureLevelResult : pressureLevelResultList ) {
+            resultLevelList.add( pressureLevelResult.getResultLevel() );
+            transferPassageAvgScore += pressureLevelResult.getResultValue();
+        }
+        transferPassageAvgLevel =
+                pressureCalculateService.calTransferPassageLevel( transferPassageAvgScore );
+
+        transferPassageAvgScore /= pressureLevelResultList.size() ;
+        transferPassageAvgScore *= transferPassageAvgScore * 100;
+
+
+        Map<String, Object> transferPassageResultMap = new HashMap<>();
+        transferPassageResultMap.put( "dataList", resultLevelList );
+        transferPassageResultMap.put( "avgScore",  transferPassageAvgScore);
+        transferPassageResultMap.put( "avgLevel",  transferPassageAvgLevel);
+        // 换乘通道 end
+
+        // 出入口 start
+        List<Double> entranceDatas =
+        pressureLevelResultService.getDataList( lineCodeFirst,
+                stationNameCode, PressureTypeEnum.ENTRANCE, PressureTimeTypeEnum.WEEKDAY );
+
+        Map<String, Object> entranceResultMap = new HashMap<>();
+
+
+
+        List<String> entranceLevelList = new ArrayList<>();
+
+        for ( Double dataValue : entranceDatas ) {
+            entranceLevelList.add( pressureCalculateService.calLevel( dataValue ) );
+        }
+
+        entranceResultMap.put( "dataList",  entranceLevelList );
+        entranceResultMap.put( "avgScore",  0 );
+        entranceResultMap.put( "avgLevel",  "E" );
+
 
 
         model.addAttribute( "plateformResultMap", plateformResultMap );
         model.addAttribute( "escalatorResultMap", escalatorResultMap );
         model.addAttribute( "gateResultMap", gateResultMap );
-        model.addAttribute( "entranceResultMap", pressureCalculateService.getEntranceResultMap() );
-        model.addAttribute( "transferPassageResultMap", pressureCalculateService.getTransferPassageResultMap() );
+        model.addAttribute( "entranceResultMap", entranceResultMap );
+        model.addAttribute( "transferPassageResultMap", transferPassageResultMap );
 
         return "result-new";
     }
@@ -271,6 +319,8 @@ public class PressureCalculationController {
         for ( PressureLevelResult pressureLevelResult : pressureLevelResultList ) {
             resultLevelList.add( pressureLevelResult.getResultLevel() );
         }
+
+
 
 
         return  resultLevelList;

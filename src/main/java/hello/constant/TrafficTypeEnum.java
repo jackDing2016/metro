@@ -5,6 +5,7 @@ public enum TrafficTypeEnum {
 
     // 进站
     IMPORT( "1", "import" ),
+    // 出站
     EXPORT( "2", "export" );
 
     private String code;
