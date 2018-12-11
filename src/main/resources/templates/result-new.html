@@ -273,7 +273,7 @@
                     <tr>
                       <td rowspan="5" class="col1">工作日</td>
                       <td>站台</td>
-                        <div th:each="item: ${plateformResultMap.line_2_11}" >
+                        <div th:each="item: ${plateformResultMap.dataList}" >
                             <div th:switch="${item}">
                                 <td th:case="'A'" th:class="gradeA" th:text="${item}"></td>
                                 <td th:case="'B'" th:class="gradeB" th:text="${item}"></td>
@@ -288,7 +288,7 @@
                     </tr>
                     <tr>
                       <td>楼扶梯</td>
-                        <div th:each="item: ${escalatorResultMap.line_2_11}" >
+                        <div th:each="item: ${escalatorResultMap.dataList}" >
                             <div th:switch="${item}">
                                 <td th:case="'A'" th:class="gradeA" th:text="${item}"></td>
                                 <td th:case="'B'" th:class="gradeB" th:text="${item}"></td>
@@ -302,7 +302,7 @@
                     </tr>
                     <tr>
                       <td>闸机</td>
-                        <div th:each="item: ${gateResultMap.line_2_11}" >
+                        <div th:each="item: ${gateResultMap.dataList}" >
                             <div th:switch="${item}">
                                 <td th:case="'A'" th:class="gradeA" th:text="${item}"></td>
                                 <td th:case="'B'" th:class="gradeB" th:text="${item}"></td>
@@ -314,20 +314,26 @@
                         <td id="gateAvgScore"  class="td-b" th:text="${gateResultMap.avgScore}" ></td>
                         <td class="gradeA" th:text="${gateResultMap.avgLevel}"></td>
                     </tr>
-                    <tr>
-                      <td>换乘通道</td>
-                        <div th:each="item: ${transferPassageResultMap.dataList}" >
-                            <div th:switch="${item}">
-                                <td th:case="'A'" th:class="gradeA" th:text="${item}"></td>
-                                <td th:case="'B'" th:class="gradeB" th:text="${item}"></td>
-                                <td th:case="'C'" th:class="gradeC" th:text="${item}"></td>
-                                <td th:case="'D'" th:class="gradeD" th:text="${item}"></td>
-                                <td th:case="'E'" th:class="gradeE" th:text="${item}"></td>
+
+                    <div th:if="${ transferPassageResultMap != null }">
+
+                        <tr>
+                            <td>换乘通道</td>
+                            <div th:each="item: ${transferPassageResultMap.dataList}" >
+                                <div th:switch="${item}">
+                                    <td th:case="'A'" th:class="gradeA" th:text="${item}"></td>
+                                    <td th:case="'B'" th:class="gradeB" th:text="${item}"></td>
+                                    <td th:case="'C'" th:class="gradeC" th:text="${item}"></td>
+                                    <td th:case="'D'" th:class="gradeD" th:text="${item}"></td>
+                                    <td th:case="'E'" th:class="gradeE" th:text="${item}"></td>
+                                </div>
                             </div>
-                        </div>
-                        <td id="transferPassageAvgScore"  class="td-b" th:text="${transferPassageResultMap.avgScore}" ></td>
-                        <td class="gradeA" th:text="${transferPassageResultMap.avgLevel}"></td>
-                    </tr>
+                            <td id="transferPassageAvgScore"  class="td-b" th:text="${transferPassageResultMap.avgScore}" ></td>
+                            <td class="gradeA" th:text="${transferPassageResultMap.avgLevel}"></td>
+                        </tr>
+
+                    </div>
+
                     <tr>
                       <td>出入口</td>
                         <div th:each="item: ${entranceResultMap.dataList}" >

@@ -9,6 +9,7 @@ import hello.dao.PressureLevelResultMapper;
 import hello.service.PressureLevelResultService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.apache.commons.collections.map.HashedMap;
+import org.apache.commons.lang3.StringUtils;
 import org.python.antlr.ast.Str;
 import org.springframework.stereotype.Service;
 
@@ -32,18 +33,23 @@ public class PressureLevelResultServiceImpl extends ServiceImpl<PressureLevelRes
     public List<Double> getDataList(String lineCode, String stationNameCode,
                                     PressureTypeEnum pressureTypeEnum, PressureTimeTypeEnum pressureTimeTypeEnum ) {
 
-        List<PressureLevelResult> pressureLevelResultList =
-                getPressureLevelResults(lineCode, stationNameCode, pressureTypeEnum, pressureTimeTypeEnum);
+        if (StringUtils.isNoneEmpty( lineCode )) {
+            List<PressureLevelResult> pressureLevelResultList =
+                    getPressureLevelResults(lineCode, stationNameCode, pressureTypeEnum, pressureTimeTypeEnum);
 
-        List<Double> dataList = new ArrayList<>();
+            List<Double> dataList = new ArrayList<>();
 
-        if ( pressureLevelResultList != null ) {
-            for ( PressureLevelResult pressureLevelResult : pressureLevelResultList ) {
-                dataList.add( pressureLevelResult.getResultValue() );
+            if ( pressureLevelResultList != null ) {
+                for ( PressureLevelResult pressureLevelResult : pressureLevelResultList ) {
+                    dataList.add( pressureLevelResult.getResultValue() );
+                }
             }
+
+            return dataList;
         }
 
-        return dataList;
+        return null;
+
     }
 
     @Override

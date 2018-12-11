@@ -41,8 +41,11 @@ public class PressureLevelStatisticsServiceImpl implements PressureLevelStatisti
         }
 
         Double sum2 = 0.0;
-        for ( Double douVal : dataList2) {
-            sum2 += douVal;
+        // 是否有两条线路
+        if ( dataList2 != null ) {
+            for ( Double douVal : dataList2) {
+                sum2 += douVal;
+            }
         }
 
         Double avgVal=

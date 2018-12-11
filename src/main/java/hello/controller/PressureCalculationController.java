@@ -70,8 +70,13 @@ public class PressureCalculationController {
         String[] lineCodeArr = lineCodeStr.split( "," );
 
         String lineCodeFirst = lineCodeArr[0];
-        String lineCodeSecond = lineCodeArr[1];
+        String lineCodeSecond = "";
 
+        // 只有一条线路的情况
+        if ( lineCodeArr.length > 1 )
+            lineCodeSecond = lineCodeArr[1];
+        if (org.apache.commons.lang3.StringUtils.isEmpty( per11Val ))
+            per11Val = "0";
 
         Map<String, Object> plateformResultMap =
             pressureCalculateService.calPressureLevelAvg( lineCodeFirst, lineCodeSecond,
@@ -115,32 +120,36 @@ public class PressureCalculationController {
                 PressureTimeTypeEnum.WEEKDAY) );
 
         // 换乘通道 start
-        List<Double> dataListFirst = pressureLevelResultService.getDataList( lineCodeArr[0],
-                stationNameCode, PressureTypeEnum.TRANSFER_PASSAGE , PressureTimeTypeEnum.WEEKDAY );
-        List<Double> dataListSecond = pressureLevelResultService.getDataList( lineCodeArr[1],
-                stationNameCode, PressureTypeEnum.TRANSFER_PASSAGE, PressureTimeTypeEnum.WEEKDAY);
-        List<PressureLevelResult> pressureLevelResultList =
-                pressureCalculateService.calAvgTransferPassage( dataListFirst, dataListSecond, stationNameCode );
-        List<String> resultLevelList = new ArrayList<>( pressureLevelResultList.size() );
+        Map<String, Object> transferPassageResultMap = null;
+        if ( lineCodeArr.length > 1 ) {
+            List<Double> dataListFirst = pressureLevelResultService.getDataList( lineCodeArr[0],
+                    stationNameCode, PressureTypeEnum.TRANSFER_PASSAGE , PressureTimeTypeEnum.WEEKDAY );
+            List<Double> dataListSecond = pressureLevelResultService.getDataList( lineCodeArr[1],
+                    stationNameCode, PressureTypeEnum.TRANSFER_PASSAGE, PressureTimeTypeEnum.WEEKDAY);
+            List<PressureLevelResult> pressureLevelResultList =
+                    pressureCalculateService.calAvgTransferPassage( dataListFirst, dataListSecond, stationNameCode );
+            List<String> resultLevelList = new ArrayList<>( pressureLevelResultList.size() );
 
-        Double transferPassageAvgScore = 0.0;
-        String transferPassageAvgLevel = "";
+            Double transferPassageAvgScore = 0.0;
+            String transferPassageAvgLevel = "";
 
-        for ( PressureLevelResult pressureLevelResult : pressureLevelResultList ) {
-            resultLevelList.add( pressureLevelResult.getResultLevel() );
-            transferPassageAvgScore += pressureLevelResult.getResultValue();
+            for ( PressureLevelResult pressureLevelResult : pressureLevelResultList ) {
+                resultLevelList.add( pressureLevelResult.getResultLevel() );
+                transferPassageAvgScore += pressureLevelResult.getResultValue();
+            }
+            transferPassageAvgLevel =
+                    pressureCalculateService.calTransferPassageLevel( transferPassageAvgScore );
+
+            transferPassageAvgScore /= pressureLevelResultList.size() ;
+            transferPassageAvgScore *= transferPassageAvgScore * 100;
+
+
+            transferPassageResultMap = new HashMap<>();
+            transferPassageResultMap.put( "dataList", resultLevelList );
+            transferPassageResultMap.put( "avgScore",  transferPassageAvgScore);
+            transferPassageResultMap.put( "avgLevel",  transferPassageAvgLevel);
         }
-        transferPassageAvgLevel =
-                pressureCalculateService.calTransferPassageLevel( transferPassageAvgScore );
 
-        transferPassageAvgScore /= pressureLevelResultList.size() ;
-        transferPassageAvgScore *= transferPassageAvgScore * 100;
-
-
-        Map<String, Object> transferPassageResultMap = new HashMap<>();
-        transferPassageResultMap.put( "dataList", resultLevelList );
-        transferPassageResultMap.put( "avgScore",  transferPassageAvgScore);
-        transferPassageResultMap.put( "avgLevel",  transferPassageAvgLevel);
         // 换乘通道 end
 
         // 出入口 start

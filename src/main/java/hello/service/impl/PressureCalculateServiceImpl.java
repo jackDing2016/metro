@@ -595,12 +595,21 @@ public class PressureCalculateServiceImpl implements PressureCalculateService {
         // 存值
         List<Double> resultValList = new ArrayList<>();
 
+        boolean isHaveMutipleLine = true;
 
-        if ( lineDataFirst != null && lineDataSecond != null ) {
+        // 只有一条线路
+        if ( StringUtils.isEmpty( lineCodeSecond ) )
+            isHaveMutipleLine = false;
+
+
+        if ( lineDataFirst != null ) {
 
             for ( int i = 0; i < lineDataFirst.size(); i++ ) {
-                Double result = lineDataFirst.get(i) * lineCodeWeightFirst +
-                        lineDataSecond.get(i) * lineCodeSecondWeight;
+                Double result = lineDataFirst.get(i) * lineCodeWeightFirst;
+
+                if ( isHaveMutipleLine )
+                    result += lineDataSecond.get(i) * lineCodeSecondWeight;
+
 
                 if ( pressureTypeEnum.getCode() == PressureTypeEnum.PLATEFORM.getCode() )
                     resultList.add( calPlateformLevel( result ) );
@@ -621,7 +630,10 @@ public class PressureCalculateServiceImpl implements PressureCalculateService {
         Map<String, Object> dataMap = new HashMap<>();
 
         // 存等级
-        dataMap.put( MetroConstant.PREFFIX_LINE + "_" + lineCodeFirst + "_" + lineCodeSecond, resultList);
+//        dataMap.put( MetroConstant.PREFFIX_LINE + "_" + lineCodeFirst + "_" + lineCodeSecond, resultList);
+
+        dataMap.put( "dataList", resultList );
+
         // 存值
         dataMap.put( MetroConstant.PREFFIX_LINE + "_" + lineCodeFirst + "_" + lineCodeSecond + MetroConstant.SUFFIX_LINE,
                     resultValList);
